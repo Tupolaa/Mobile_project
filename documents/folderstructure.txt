@@ -1,0 +1,48 @@
+cdproject-root/
+├── 🛑 .gitignore                   // 🛑 Tells Git what to ignore globally across the project
+├── 🔐 .env                         // 🔒 Environment variables (API keys, secrets) – never commit!
+├── 🚀 App.js                       // 🚀 Root component (entry point for React Native)
+├── 📜 package.json                 // 📜 Tracks dependencies, scripts, metadata
+├── 📦 node_modules                 // 📦 Installed npm modules
+├── 📱 android/                     // 📱 Native Android code (Gradle, Java/Kotlin)
+├── 🍎 ios/                         // 🍎 Native iOS code (Xcode, Swift/Obj-C)
+├── 🛠️ metro.config.js              // 🛠️ Metro bundler configuration
+├── 🌐 assets/                      // 🌐 Static assets bundled with the app
+│   ├── 🖼️ images/                  // 🖼️ PNG, JPG, SVG (app icons, illustrations, logos)
+│   ├── 🔊 audio/                   // 🔊 Audio files
+│   ├── 🎞️ videos/                  // 🎞️ Video files
+│   └── ✍️ fonts/                   // ✍️ Custom fonts
+├── 📂 src/                         // 📂 Main application source code
+│   ├── 🧬 models/                  // 🧬 Data models (classes or schemas)
+│   │   └── 📄 User.js
+│   ├── 🎨 components/              // 🎨 Reusable UI components (buttons, cards, etc.)
+│   │   └── 📄 Button.js
+│   │   └── 📄 Header.js
+│   ├── 📦 screens/                 // 📦 Screen-level components (grouped by feature/page)
+│   │   ├── 🏠 HomeScreen.js
+│   │   ├── 👤 ProfileScreen.js
+│   │   └── 🔑 LoginScreen.js
+│   ├── 🧭 navigation/              // 🧭 React Navigation stacks, tabs, navigators
+│   │   └── 📄 AppNavigator.js
+│   ├── 🛠️ services/                // 🛠️ API services (REST, GraphQL, Firebase, etc., SQLite, MongoDB, CRUD-operations related to services)
+│   │   └── 📄 sqllite.js
+│   │   └── 📄 mongodb.js
+│   │   └── 📄 apiService.js
+│   ├── ⚙️ config/                  // ⚙️ App-wide config (constants, theme, env setup)
+│   │   └── 📄 theme.js
+│   │   └── 📄 constants.js
+│   ├── 🧷 hooks/                   // 🧷 Custom React hooks
+│   │   └── 📄 useAuth.js
+│   ├── 🧰 utils/                   // 🧰 Utility/helper functions
+│   │   └── 📄 formatDate.js
+│   ├── 🧮 lib/                     // 🧮 Shared libraries/modules (logging, analytics)
+│   │   └── 📄 Logger.js
+│   ├── 📊 context/                 // 📊 React Context providers (state management)
+│   │   └── 📄 AuthContext.js
+│   ├── 🧪 tests/                   // 🧪 Jest/Detox tests
+│   │   └── 📄 App.test.js
+│   └── 🏗️ store/                   // 🏗️ Redux/Zustand/Recoil store (if state mgmt used)
+│       └── 📄 rootReducer.js
+├── 📄 babel.config.js              // 📄 Babel configuration for React Native
+├── 📄 tsconfig.json                // 📄 TypeScript config (if using TS)
+└── 📄 app.json                     // 📄 Expo/React Native CLI app metadata
