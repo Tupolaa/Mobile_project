@@ -4,17 +4,21 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 export default function Navbar() {
   return (
     <View style={styles.navbar}>
+      {/* Home */}
       <TouchableOpacity style={styles.link}>
-        <Text style={styles.linkText}>🏠 Home</Text>
+        <Text style={styles.linkText}>🏠</Text>
       </TouchableOpacity>
+      {/* Recommendations */}
       <TouchableOpacity style={styles.link}>
-        <Text style={styles.linkText}>⭐ Recommendations</Text>
+        <Text style={styles.linkText}>⭐</Text>
       </TouchableOpacity>
+      {/* Search */}
       <TouchableOpacity style={styles.link}>
-        <Text style={styles.linkText}>🔍 Search</Text>
+        <Text style={styles.linkText}>🔍</Text>
       </TouchableOpacity>
+      {/* Login/Register/Profile */}
       <TouchableOpacity style={styles.link}>
-        <Text style={styles.linkText}>👤 Login/Profile</Text>
+        <Text style={styles.linkText}>👤</Text>
       </TouchableOpacity>
     </View>
   );
