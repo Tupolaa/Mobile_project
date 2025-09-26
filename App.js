@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { getAllReviewsByMovie } from "./src/services/reviewsAPI";
 import Header from "./src/components/Header";
 import ReviewItem from "./src/components/ReviewItem";
-// import Navbar from "./src/components/Navbar";
+import Navbar from "./src/components/Navbar";
 
 export default function App() {
   const [reviews, setReviews] = useState([]);
@@ -35,7 +35,7 @@ export default function App() {
           renderItem={({ item }) => <ReviewItem item={item} />}
         />
 
-        {/* <Navbar /> */}
+        <Navbar />
       </SafeAreaView>
     </SafeAreaProvider>
   );
