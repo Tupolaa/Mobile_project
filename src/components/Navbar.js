@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Navbar() {
   return (
@@ -29,12 +30,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     paddingVertical: 15,
-    backgroundColor: "#eee",
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
+    backgroundColor: "#d072f8ff",
   },
   link: {
     padding: 5,
