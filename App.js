@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, FlatList, View } from "react-native";
-import { getAllReviews, getAllReviewsByMovie } from "./src/services/reviewsAPI";
+import { StyleSheet, FlatList } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+import { getAllReviewsByMovie } from "./src/services/reviewsAPI";
 import Header from "./src/components/Header";
 import ReviewItem from "./src/components/ReviewItem";
+// import Navbar from "./src/components/Navbar";
 
 export default function App() {
   const [reviews, setReviews] = useState([]);
 
   const loadReviews = async () => {
     try {
-      // const rows = await getAllReviews();
-      // Minecraft movie
       const movieId = "680d29f98e8db1ede3dfa796";
       const rows = await getAllReviewsByMovie(movieId);
       setReviews(rows);
@@ -24,22 +25,25 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Home" />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container} edges={["top", "left", "right", "bottom"]}>
+        <Header title="Home" />
 
-      <FlatList
-        data={reviews}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <ReviewItem item={item} />}
-      />
-    </SafeAreaView>
+        <FlatList
+          data={reviews}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <ReviewItem item={item} />}
+        />
+
+        {/* <Navbar /> */}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
     backgroundColor: "#fff",
   },
 });
