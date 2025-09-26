@@ -4,15 +4,20 @@ import { SafeAreaView, Text, FlatList, View } from "react-native";
 export default function App() {
   const [reviews, setReviews] = useState([]);
 
-  const API_URL = "http://10.0.2.2:5000/review/";
-  // const API_URL = "http://172.20.224.1:5000/review/";
-  // ⚠️ For Android Emulator: use 10.0.2.2
-  // For iOS simulator: http://localhost:5050
-  // For real device: replace with your PC's local IP (e.g. http://192.168.1.100:5050)
+  const ENDPOINT = "/review";
+
+  // PUBLIC testing on Real Devices: https://moviereview-472307.lm.r.appspot.com/ENDPOINTS
+  const API_URL = "https://moviereview-472307.lm.r.appspot.com";
+
+  // LOCAL testing on Real Devices: replace with your PC's local IP (e.g. http://192.168.1.100:PORT/ENDPOINTS)
+  // const API_URL = "http://192.168.1.106:5000";
+
+  // LOCAL testing on Android Emulators: use use 10.0.2.2. You also need CORS in server code.
+  // const API_URL = "http://10.0.2.2:5000";
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(API_URL + ENDPOINT);
       const json = await res.json();
       console.log("Request succesful and response received!");
       setReviews(json.data);
