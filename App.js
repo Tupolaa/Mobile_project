@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Category from './components/Category';
+import MovieListScreen from "./components/MovieList";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="Movies" component={MovieListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,21 +1,21 @@
-
-
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  Modal,
+  Button,
+  Image,
 } from "react-native";
-import { BACKEND_URL } from '@env';
-
+import { BACKEND_URL } from "@env";
 
 export default function GenreScreen() {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // load genres on first render
   useEffect(() => {
@@ -27,6 +27,7 @@ export default function GenreScreen() {
 
   const handlePress = (name) => {
     setSelectedGenre(name);
+    setModalVisible(true);
     fetch(`${BACKEND_URL}/category/${encodeURIComponent(name)}`)
       .then((res) => res.json())
       .then((data) => setMovies(data))
@@ -34,7 +35,7 @@ export default function GenreScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.heading}>Choose a Genre</Text>
 
       {/* Genre buttons */}
@@ -50,12 +51,16 @@ export default function GenreScreen() {
         ))}
       </View>
 
-      {/* Movies output */}
-      {selectedGenre && (
-        <View style={{ marginTop: 20, width: "100%" }}>
-          <Text style={styles.subHeading}>
-            {selectedGenre} Movies:
-          </Text>
+      {/* Movies modal */}
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={{ flex: 1, padding: 16 }}>
+          <Button title="Close" onPress={() => setModalVisible(false)} />
+          <Text style={styles.subHeading}>{selectedGenre} Movies</Text>
+
           {movies.length === 0 ? (
             <Text>No movies found.</Text>
           ) : (
@@ -69,21 +74,21 @@ export default function GenreScreen() {
                   <Text numberOfLines={3} style={styles.movieOverview}>
                     {item.overview}
                   </Text>
-                  <Text style={styles.moviePoster}>{item.posters[0]}</Text>
+                  <Image style={styles.moviePoster} source={{ uri: `https://image.tmdb.org/t/p/original${item.posters[0]}` }} />
                 </View>
               )}
             />
           )}
         </View>
-      )}
-    </ScrollView>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, alignItems: "center" },
+  container: { flex: 1, padding: 16, alignItems: "center" },
   heading: { fontSize: 22, marginBottom: 16, fontWeight: "bold" },
-  subHeading: { fontSize: 18, marginBottom: 10, fontWeight: "600" },
+  subHeading: { fontSize: 18, marginVertical: 10, fontWeight: "600" },
   buttonWrap: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -96,6 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 6,
   },
+  moviePoster: { width: 100, height: 150, marginTop: 8, borderRadius: 4 },
   buttonText: { color: "#fff", fontSize: 16 },
   movieCard: {
     padding: 12,
