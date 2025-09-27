@@ -69,13 +69,23 @@ export default function GenreScreen() {
               keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
                 <View style={styles.movieCard}>
-                  <Text style={styles.movieTitle}>{item.title}</Text>
-                  <Text style={styles.movieDate}>{item.release_date}</Text>
-                  <Text numberOfLines={3} style={styles.movieOverview}>
-                    {item.overview}
-                  </Text>
-                  <Image style={styles.moviePoster} source={{ uri: `https://image.tmdb.org/t/p/original${item.posters[0]}` }} />
-                </View>
+  <Text style={styles.movieTitle}>{item.title}</Text>
+  <Text style={styles.movieDate}>{item.release_date}</Text>
+  <Text numberOfLines={3} style={styles.movieOverview}>
+    {item.overview}
+  </Text>
+
+  {item.posters?.length > 0 && (
+    <Image
+      style={styles.moviePoster}
+      source={{
+        uri: `https://image.tmdb.org/t/p/original${
+          item.posters[Math.floor(Math.random() * item.posters.length)]
+        }`,
+      }}
+    />
+  )}
+</View>
               )}
             />
           )}
