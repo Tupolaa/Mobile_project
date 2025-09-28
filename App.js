@@ -1,30 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import RegisterScreen from './components/RegisterScreen';
-import LoginScreen from './components/LoginScreen';
-import TestScreen from './components/TestScreen';
+// App.js
+import React from "react";
+import { AuthProvider } from "./context/AuthContext";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import LoginScreen from "./components/LoginScreen";
+import RegisterScreen from "./components/RegisterScreen";
+import TestScreen from "./components/TestScreen";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Testing App Screens</Text>
-      <RegisterScreen />
-      <View style={{ height: 20 }} />
-      <LoginScreen />
-      <View style={{ height: 20 }} />
-      <TestScreen />
-      <StatusBar style="auto" />
-    </ScrollView>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Test">
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Test" component={TestScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-});
