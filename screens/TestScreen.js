@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
 import { View, Button, Text } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import { BACKEND_URL } from "@env";
 
-const BACKEND_URL = "http://192.168.1.231:5000";
-// const BACKEND_URL = "http://10.0.2.2:5000";
+
+
 
 export default function TestScreen({navigation}) {
   const { token, user, logout } = useContext(AuthContext);
