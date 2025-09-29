@@ -11,12 +11,14 @@ export default function Header({ title }) {
 
 const styles = StyleSheet.create({
   header: {
-    padding: 20,
+    padding: 15,
     alignItems: "center",
-    backgroundColor: "#202020ff",
+    backgroundColor: "#E2E2E2",
+    borderBottomWidth: 1,
+    borderColor: "#424242ff",
   },
   title: {
-    color: "#ffffffff",
+    color: "#424242ff",
     fontSize: 24,
     fontWeight: "bold",
   },
