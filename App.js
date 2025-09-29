@@ -4,8 +4,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Category from './screens/Category';
 import MovieListScreen from "./screens/MovieList";
+// App.js
+
+import { AuthProvider } from "./context/AuthContext";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import TestScreen from "./screens/TestScreen";
 
 const Stack = createNativeStackNavigator();
+
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -21,13 +32,18 @@ function HomeScreen({ navigation }) {
 
 export default function App() {
   return (
+    <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Movies" component={MovieListScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Test" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }
 
