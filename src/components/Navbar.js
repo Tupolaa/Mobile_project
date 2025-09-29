@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Navbar() {
   return (
@@ -31,8 +30,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingVertical: 15,
     borderTopWidth: 1,
-    borderTopColor: "#ccc",
-    backgroundColor: "#d072f8ff",
+    borderTopColor: "#ffffffff",
+    backgroundColor: "#202020ff",
+    color: "#ffffffff",
   },
   link: {
     padding: 5,

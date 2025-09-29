@@ -33,7 +33,7 @@ export const getAllReviewsByMovie = async (id) => {
     if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
 
     const json = await res.json();
-    console.log("[ggetAllReviewsByMovie] ✅ Fetched:", json.data.length);
+    console.log("[getAllReviewsByMovie] ✅ Fetched:", json.data.length);
     return json.data;
   } catch (err) {
     console.error("[getAllReviewsByMovie] ❌ Error:", err);
