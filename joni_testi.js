@@ -3,12 +3,12 @@ import { StyleSheet, FlatList, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
-import { getAllReviews, getAllReviewsByMovie } from "./src/services/reviewsAPI";
-import Header from "./src/components/Header";
-import ReviewItem from "./src/components/ReviewItem";
-import Navbar from "./src/components/Navbar";
+import { getAllReviews, getAllReviewsByMovie } from "./services/reviewsAPI";
+import Header from "./components/Header";
+import ReviewItem from "./components/ReviewItem";
+import Navbar from "./components/Navbar";
 
-export default function App() {
+export default function () {
   const [reviews, setReviews] = useState([]);
 
   // joo
@@ -49,13 +49,11 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
     </>
-
-      );
+  );
 }
 
-
 const styles = StyleSheet.create({
-      safearea: {
+  safearea: {
     flex: 1,
     backgroundColor: "transparent",
   },
@@ -63,4 +61,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E2E2E2",
   },
-  });
+});
