@@ -4,9 +4,9 @@ import { AuthProvider } from "./context/AuthContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import LoginScreen from "./components/LoginScreen";
-import RegisterScreen from "./components/RegisterScreen";
-import TestScreen from "./components/TestScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import TestScreen from "./screens/TestScreen";
 
 const Stack = createNativeStackNavigator();
 
