@@ -10,6 +10,7 @@ import Navbar from "./src/components/Navbar";
 export default function App() {
   const [reviews, setReviews] = useState([]);
 
+  // joo
   const loadReviews = async () => {
     try {
       const movieId = "680d29f98e8db1ede3dfa796";
