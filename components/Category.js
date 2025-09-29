@@ -19,20 +19,31 @@ export default function GenreScreen() {
 
   // load genres on first render
   useEffect(() => {
-    fetch(`${BACKEND_URL}/genres`)
-      .then((res) => res.json())
-      .then((data) => setGenres(data))
-      .catch((err) => console.error("Fetch genres error:", err));
-  }, []);
+  const fetchGenres = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/genres`);
+      const data = await res.json();
+      setGenres(data);
+    } catch (err) {
+      console.error("Fetch genres error:", err);
+    }
+  };
 
-  const handlePress = (name) => {
+  fetchGenres();
+}, []);
+
+const handlePress = async (name) => {
+  try {
     setSelectedGenre(name);
     setModalVisible(true);
-    fetch(`${BACKEND_URL}/category/${encodeURIComponent(name)}`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data))
-      .catch((err) => console.error("Fetch movies error:", err));
-  };
+
+    const res = await fetch(`${BACKEND_URL}/category/${encodeURIComponent(name)}`);
+    const data = await res.json();
+    setMovies(data);
+  } catch (err) {
+    console.error("Fetch movies error:", err);
+  }
+};
 
   return (
     <View style={styles.container}>
