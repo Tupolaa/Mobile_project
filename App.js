@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Category from './components/Category';
-import MovieListScreen from "./components/MovieList";
+import Category from './screens/Category';
+import MovieListScreen from "./screens/MovieList";
 
 const Stack = createNativeStackNavigator();
 
