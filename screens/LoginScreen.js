@@ -1,10 +1,17 @@
 import React, { use, useState, useContext } from "react";
-import { View, TextInput, Button, Text, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
 import { BACKEND_URL } from "@env";
-
-// Emulator IP for Android, LAN IP for real phone
+import StyledButton from "../components/StyledButton";
+import { loginRequest } from "../services/authService";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -15,34 +22,22 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     setMessage("");
     try {
-      const res = await fetch(`${BACKEND_URL}/mobileAuth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        setMessage(errorData.message || "Login failed");
-        return;
-      }
-
-      const data = await res.json();
-      if (data.token) {
-        await login(data.token);
-        setMessage("Logged in!");
-        console.log("Token:", data.token); //DELETE THIS LATER
-        navigation.replace("Test"); // replaces Login in stack so user cannot go back
-      }
+      const data = await loginRequest(username, password);
+      await login(data.token);
+      navigation.replace("Profile");
     } catch (err) {
-      setMessage("Network error: " + err.message);
-      console.error(err);
+      setMessage(err.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={styles.input} />
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
       <TextInput
         placeholder="Password"
         value={password}
@@ -50,8 +45,11 @@ export default function LoginScreen({ navigation }) {
         style={styles.input}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Go to Register" onPress={() => navigation.navigate("Register")} />
+      <StyledButton title="Login" onPress={handleLogin} />
+      <StyledButton
+        title="Go to Register"
+        onPress={() => navigation.navigate("Register")}
+      />
       <Text>{message}</Text>
     </View>
   );

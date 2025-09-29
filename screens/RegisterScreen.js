@@ -1,37 +1,39 @@
 import React, { useState, useContext } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { View, TextInput, Text, StyleSheet } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import { BACKEND_URL } from "@env";
+import StyledButton from "../components/StyledButton";
+import { registerRequest } from "../services/authService";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { login } = useContext(AuthContext); // <-- use context
+  const { login } = useContext(AuthContext);
 
   const handleRegister = async () => {
+    setMessage("");
     try {
-      const res = await fetch(`${BACKEND_URL}/mobileAuth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await res.json();
+      const data = await registerRequest(username, password);
 
       if (data.token) {
-        await login(data.token); // <-- call context login instead
-        setMessage("Registered successfully!");
+        await login(data.token); // automatically log in after register
+        navigation.replace("Profile");
       } else if (data.message) {
         setMessage(data.message);
       }
     } catch (err) {
-      setMessage("Error: " + err.message);
+      setMessage(err.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={styles.input} />
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
       <TextInput
         placeholder="Password"
         value={password}
@@ -39,7 +41,11 @@ export default function RegisterScreen() {
         style={styles.input}
         secureTextEntry
       />
-      <Button title="Register" onPress={handleRegister} />
+      <StyledButton title="Register" onPress={handleRegister} />
+      <StyledButton
+        title="Go to Login"
+        onPress={() => navigation.navigate("Login")}
+      />
       <Text>{message}</Text>
     </View>
   );

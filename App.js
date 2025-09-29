@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import TestScreen from "./screens/TestScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ export default function App() {
     <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator>
-      
+        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Test" component={TestScreen} />
