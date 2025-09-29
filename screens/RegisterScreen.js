@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-
-const BACKEND_URL = "http://192.168.1.231:5000";
-// const BACKEND_URL = 'http://10.0.2.2:5000';
+import { BACKEND_URL } from "@env";
 
 export default function RegisterScreen() {
   const [username, setUsername] = useState("");
@@ -33,12 +31,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
+      <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={styles.input} />
       <TextInput
         placeholder="Password"
         value={password}

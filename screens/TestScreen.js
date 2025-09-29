@@ -3,10 +3,7 @@ import { View, Button, Text } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { BACKEND_URL } from "@env";
 
-
-
-
-export default function TestScreen({navigation}) {
+export default function TestScreen({ navigation }) {
   const { token, user, logout } = useContext(AuthContext);
   const [response, setResponse] = useState("");
 
@@ -16,11 +13,14 @@ export default function TestScreen({navigation}) {
       return;
     }
     try {
+      // console.log(BACKEND_URL);
       //user.id comes from AuthContext user state
       const res = await fetch(`${BACKEND_URL}/review/user/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(res);
       const data = await res.json();
+
       setResponse(JSON.stringify(data, null, 2));
     } catch (err) {
       setResponse("Error: " + err.message);
