@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   row: {
     padding: 10,
     backgroundColor: "#ffffffff",
-    borderRadius: 25,
+    borderRadius: 3,
     borderWidth: 1,
     borderColor: "#424242ff",
   },
