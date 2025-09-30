@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, Button, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker"; // install: npm install @react-native-picker/picker
 
+// Tää form screen pitäs saada vastaanottamaan movie id ja movie name -parametrit. Joten kun sitä käytetään se form tehää dynaamisesti.
 export default function FormScreen() {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
@@ -14,6 +15,7 @@ export default function FormScreen() {
     }
 
     // Example: handle submission (replace with API call)
+    // Tää pitää kattoo toimimaan dynaamisesti annetun movie id mukaan
     const reviewData = {
       movie: "680d29f98e8db1ede3dfa795", // movie id
       rating,
@@ -33,6 +35,7 @@ export default function FormScreen() {
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
+          {/* Tähän pitäs saada se elokuvan nimi */}
           <Text style={styles.title}>Write a review for{"\n"}Movie X</Text>
 
           <View style={styles.formGroup}>

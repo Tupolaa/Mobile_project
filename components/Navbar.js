@@ -23,14 +23,14 @@ export default function Navbar() {
           <Home color={active === "home" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
 
-        {/* Review Screen, for testing only */}
+        {/* Reviews Screen, for testing only */}
         <TouchableOpacity onPress={() => handlePress("Review", "review")}>
           <Home color={active === "review" ? "#2D64AC" : "#a31993ff"} />
         </TouchableOpacity>
 
-        {/* Review Form Screen, for testing only */}
-        <TouchableOpacity onPress={() => handlePress("ReviewForm", "review-form")}>
-          <Home color={active === "review-form" ? "#2D64AC" : "#4ea319ff"} />
+        {/* Form Screen, for testing only */}
+        <TouchableOpacity onPress={() => handlePress("Form", "form")}>
+          <Home color={active === "form" ? "#2D64AC" : "#4ea319ff"} />
         </TouchableOpacity>
 
         {/* <TouchableOpacity onPress={() => handlePress("Search")}>

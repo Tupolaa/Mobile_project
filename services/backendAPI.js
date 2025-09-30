@@ -19,6 +19,7 @@ export const getAllReviews = async () => {
 
 // GET - all reviews by movie ID
 export const getAllReviewsByMovie = async (id) => {
+  if (!id) throw new Error("No id provided!");
   try {
     console.log("[getAllReviewsByMovie] Fetching...", { id });
     const res = await fetch(`${BACKEND_URL}/review/movie/${id}`);
@@ -37,7 +38,7 @@ export const getAllReviewsByMovie = async (id) => {
 // GET - all reviews by user ID
 export const getAllReviewsByUser = async (token, id) => {
   if (!token) throw new Error("No token provided!");
-  if (!id) throw new Error("No userId provided!");
+  if (!id) throw new Error("No id provided!");
 
   try {
     console.log("[getAllReviewsByUser] Fetching...", { id });
