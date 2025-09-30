@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   safearea: {
     flex: 1,
     backgroundColor: "transparent",
+    // debuggamista varten
     // backgroundColor: "#e31313ff",
   },
   container: {
