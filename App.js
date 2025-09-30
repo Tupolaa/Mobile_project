@@ -75,6 +75,7 @@ export default function App() {
           <View style={styles.container}>
             {/* Stack screens take all space above the navbar */}
             <View style={styles.stackContainer}>
+              {/* Vaihda tähän initalRouteName mist haluut alottaa */}
               <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
@@ -85,7 +86,7 @@ export default function App() {
               </Stack.Navigator>
             </View>
 
-            {/* Navbar stays at the bottom */}
+            {/* Navbar */}
             <Navbar />
           </View>
         </NavigationContainer>
