@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useEffect, useState } from "react";
-import { getAllReviews, getAllReviewsByMovie } from "../services/reviewsAPI";
+import { getAllReviews, getAllReviewsByMovie } from "../services/backendAPI";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReviewItem from "../components/ReviewItem";
 
-export default function HomeScreen({ navigation }) {
+export default function ReviewScreen() {
   const [reviews, setReviews] = useState([]);
 
   // joo

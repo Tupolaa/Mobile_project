@@ -7,13 +7,13 @@ import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
 import ReviewScreen from "./screens/ReviewScreen";
-import ReviewFormScreen from "./screens/ReviewFormScreen";
+import FormScreen from "./screens/FormScreen";
 import Category from "./screens/Category";
 import MovieListScreen from "./screens/MovieList";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import TestScreen from "./screens/TestScreen";
-import Header from "./components/Header";
+import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 
 const Stack = createNativeStackNavigator();
@@ -26,14 +26,14 @@ export default function App() {
           <StatusBar style="dark" />
 
           <View style={styles.container}>
-            {/* Header */}
-            <Header title="CRITIQ" />
+            {/* Logo */}
+            <Logo name="CRITIQ" />
             <View style={styles.stackContainer}>
               {/* Vaihda tähän initalRouteName mist haluut alottaa */}
               <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="Review" component={ReviewScreen} />
-                <Stack.Screen name="ReviewForm" component={ReviewFormScreen} />
+                <Stack.Screen name="ReviewForm" component={FormScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
                 <Stack.Screen name="Test" component={TestScreen} />
