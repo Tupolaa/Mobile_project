@@ -8,7 +8,7 @@ import useBottomPadding from "../hooks/useBottomPadding";
 
 // Review screen pitäs saada vastaanottamaan joko (elokuva id + elokuva nimi) tai user id
 export default function ReviewScreen() {
-  const contentPadding = useBottomPadding(); // 👈 global padding hook
+  const contentPadding = useBottomPadding();
   const [reviews, setReviews] = useState([]);
 
   // joo
@@ -41,7 +41,7 @@ export default function ReviewScreen() {
             data={reviews}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => <ReviewItem item={item} />}
-            contentContainerStyle={contentPadding} // 👈 ensures no overlap
+            contentContainerStyle={contentPadding}
           />
         </View>
       </View>
