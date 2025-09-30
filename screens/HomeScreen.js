@@ -31,7 +31,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
-    <SafeAreaView style={styles.safearea} edges={["left", "right", "bottom"]}>
+    <SafeAreaView style={styles.safearea} edges={["top", "left", "right"]}>
       <View style={styles.container}>
         <Header title="Home" />
 
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }) {
         />
 
         {/* <Navbar /> */}
-        <Navbar navigation={navigation} />
+        {/* <Navbar navigation={navigation} /> */}
       </View>
     </SafeAreaView>
   );
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   safearea: {
     flex: 1,
     backgroundColor: "transparent",
+    // backgroundColor: "#e31313ff",
   },
   container: {
     flex: 1,
