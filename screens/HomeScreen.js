@@ -1,48 +1,21 @@
 import React from "react";
-import { View, Text, Button, StyleSheet, FlatList } from "react-native";
-import { useEffect, useState } from "react";
-import { getAllReviews, getAllReviewsByMovie } from "../services/reviewsAPI";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import Header from "../components/Header";
-import ReviewItem from "../components/ReviewItem";
-import Navbar from "../components/Navbar";
+import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen({ navigation }) {
-  const [reviews, setReviews] = useState([]);
-
-  // joo
-  const loadReviews = async () => {
-    try {
-      // get all testing
-      const rows = await getAllReviews();
-      // get by movie id testing
-      // const movieId = "680d29f98e8db1ede3dfa796";
-      // const rows = await getAllReviewsByMovie(movieId);
-
-      setReviews(rows);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    loadReviews();
-  }, []);
-
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
-    <SafeAreaView style={styles.safearea} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={styles.container}>
-        <Header title="Home" />
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>Welcome, X!</Text>
 
-        <FlatList
-          data={reviews}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <ReviewItem item={item} />}
-        />
-
-        {/* <Navbar /> */}
-        {/* <Navbar navigation={navigation} /> */}
+          <Text style={styles.paragraph}>
+            Here, you can browse the list of films,{"\n"}
+            read reviews by other users,{"\n"}
+            and—<Text style={styles.bold}>if you'd like to share your own</Text>—register and log in!
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -57,6 +30,25 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
     backgroundColor: "#E2E2E2",
+  },
+  contentContainer: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#2D64AC",
+  },
+  paragraph: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#424242",
+  },
+  bold: {
+    fontWeight: "bold",
   },
 });
