@@ -5,132 +5,221 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Modal,
-  Button,
   Image,
 } from "react-native";
+import { SearchBar } from "react-native-elements";
 import { BACKEND_URL } from "@env";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  'React keys must be passed directly to JSX'
+]);
 export default function GenreScreen() {
   const [genres, setGenres] = useState([]);
-  const [movies, setMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [search, setSearch] = useState("");
 
-  // load genres on first render
+  // load genres + all movies on mount
   useEffect(() => {
-  const fetchGenres = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/genres`);
-      const data = await res.json();
-      setGenres(data);
-    } catch (err) {
-      console.error("Fetch genres error:", err);
-    }
+    const fetchGenres = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/genres`);
+        const data = await res.json();
+        setGenres(data);
+      } catch (err) {
+        console.error("Fetch genres error:", err);
+      }
+    };
+
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/movies`);
+        const data = await res.json();
+        setAllMovies(data);
+        setFilteredMovies(data); 
+      } catch (err) {
+        console.error("Fetch movies error:", err);
+      }
+    };
+
+    fetchGenres();
+    fetchMovies();
+  }, []);
+
+ 
+  const handlePress = (name) => {
+    setSelectedGenre(name);
+    setSearch("");
+
+   
+    const filtered = allMovies.filter((movie) => {
+      const genreNames = movie.genre_names || []; 
+      return genreNames.includes(name);
+    });
+
+    setFilteredMovies(filtered);
   };
 
-  fetchGenres();
-}, []);
+  
+  const updateSearch = (text) => {
+    setSearch(text);
 
-const handlePress = async (name) => {
-  try {
-    setSelectedGenre(name);
-    setModalVisible(true);
+    const baseList =
+      selectedGenre === null
+        ? allMovies
+        : allMovies.filter((movie) =>
+            (movie.genre_names || []).includes(selectedGenre)
+          );
 
-    const res = await fetch(`${BACKEND_URL}/category/${encodeURIComponent(name)}`);
-    const data = await res.json();
-    setMovies(data);
-  } catch (err) {
-    console.error("Fetch movies error:", err);
-  }
-};
+    const searched = baseList.filter((m) =>
+      m.title.toLowerCase().includes(text.toLowerCase())
+    );
 
-  return (
-    <View style={styles.container}>
+    setFilteredMovies(searched);
+  };
+
+  const renderHeader = () => (
+    <View>
       <Text style={styles.heading}>Choose a Genre</Text>
-
-      {/* Genre buttons */}
+      <SearchBar
+        containerStyle={styles.searchBarContainer}
+        inputContainerStyle={styles.searchBarInput}
+        placeholder="Search movies..."
+        onChangeText={updateSearch}
+        value={search}
+        lightTheme
+        round
+      />
       <View style={styles.buttonWrap}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedGenre === null && styles.activeButton,
+          ]}
+          onPress={() => {
+            setSelectedGenre(null);
+            setSearch("");
+            setFilteredMovies(allMovies); 
+          }}
+        >
+          <Text style={styles.buttonText}>All</Text>
+        </TouchableOpacity>
         {genres.map((g) => (
           <TouchableOpacity
             key={g.id}
-            style={styles.button}
+            style={[
+              styles.button,
+              selectedGenre === g.name && styles.activeButton,
+            ]}
             onPress={() => handlePress(g.name)}
           >
             <Text style={styles.buttonText}>{g.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
+      <Text style={styles.subHeading}>
+        {selectedGenre ? `${selectedGenre} Movies` : "All Movies"}
+      </Text>
+    </View>
+  );
 
-      {/* Movies modal */}
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={{ flex: 1, padding: 16 }}>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
-          <Text style={styles.subHeading}>{selectedGenre} Movies</Text>
+  return (
+    <FlatList
+      ListHeaderComponent={renderHeader}
+      data={filteredMovies}
+      keyExtractor={(item) => item._id}
+      numColumns={3}
+      columnWrapperStyle={styles.row}
+      ListEmptyComponent={
+      <Text style={styles.noMovies}>No movies found.</Text>
+    }
+      renderItem={({ item }) => {
+        const posterUrl =
+          item.posters?.length > 0
+            ? `https://image.tmdb.org/t/p/w500${
+                item.posters[Math.floor(Math.random() * item.posters.length)]
+              }`
+            : null;
 
-          {movies.length === 0 ? (
-            <Text>No movies found.</Text>
-          ) : (
-            <FlatList
-              data={movies}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <View style={styles.movieCard}>
-  <Text style={styles.movieTitle}>{item.title}</Text>
-  <Text style={styles.movieDate}>{item.release_date}</Text>
-  <Text numberOfLines={3} style={styles.movieOverview}>
-    {item.overview}
-  </Text>
-
-  {item.posters?.length > 0 && (
-    <Image
-      style={styles.moviePoster}
-      source={{
-        uri: `https://image.tmdb.org/t/p/original${
-          item.posters[Math.floor(Math.random() * item.posters.length)]
-        }`,
+        return (
+          <View style={styles.movieCard}>
+            {posterUrl && (
+              <Image
+                source={{ uri: posterUrl }}
+                style={styles.moviePoster}
+                resizeMode="cover"
+              />
+            )}
+            <Text style={styles.movieTitle} numberOfLines={2}>
+              {item.title}
+            </Text>
+          </View>
+        );
       }}
     />
-  )}
-</View>
-              )}
-            />
-          )}
-        </View>
-      </Modal>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, alignItems: "center" },
-  heading: { fontSize: 22, marginBottom: 16, fontWeight: "bold" },
-  subHeading: { fontSize: 18, marginVertical: 10, fontWeight: "600" },
+  heading: { fontSize: 22, 
+  marginBottom: 16,
+  fontWeight: "bold"
+},
+  subHeading: {
+    fontSize: 18,
+    marginVertical: 10,
+    fontWeight: "600",
+    textAlign: "center"
+  },
   buttonWrap: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+    marginBottom: 10,
+  },
+  noMovies: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16
   },
   button: {
     backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
     borderRadius: 8,
     margin: 6,
   },
-  moviePoster: { width: 100, height: 150, marginTop: 8, borderRadius: 4 },
-  buttonText: { color: "#fff", fontSize: 16 },
-  movieCard: {
-    padding: 12,
-    marginVertical: 6,
-    borderRadius: 8,
-    backgroundColor: "#f2f2f2",
+  activeButton: {
+    backgroundColor: "#0056b3",
   },
-  movieTitle: { fontSize: 16, fontWeight: "bold" },
-  movieDate: { fontSize: 14, color: "#666" },
-  movieOverview: { marginTop: 4, fontSize: 14 },
+  buttonText: { color: "#fff", fontSize: 16 },
+  row: { justifyContent: "space-between" },
+  movieCard: {
+    flex: 1,
+    margin: 5,
+    alignItems: "center",
+    backgroundColor: "#f2f2f2",
+    borderRadius: 6,
+    padding: 6,
+  },
+  moviePoster: {
+    width: 100,
+    height: 150,
+    borderRadius: 6,
+    marginBottom: 6
+  },
+  movieTitle: {
+    fontSize: 12,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  searchBarInput: { backgroundColor: "#eee", borderRadius: 20 },
+  searchBarContainer: {
+    width: "100%",
+    marginBottom: 10,
+    backgroundColor: "transparent",
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
 });

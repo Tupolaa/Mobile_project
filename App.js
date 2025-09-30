@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Category from './screens/Category';
-import MovieListScreen from "./screens/MovieList";
+import MovieListScreen from "./screens/MovieScreen";
 import { AuthProvider } from "./context/AuthContext";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -30,10 +30,11 @@ export default function App() {
     <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Test" component={TestScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Movies" component={MovieListScreen} />
       </Stack.Navigator>
