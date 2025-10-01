@@ -17,7 +17,7 @@ export default function FormScreen() {
     // Example: handle submission (replace with API call)
     // Tää pitää kattoo toimimaan dynaamisesti annetun movie id mukaan
     const reviewData = {
-      movie: "680d29f98e8db1ede3dfa795", // movie id
+      movie: "680d29f98e8db1ede3dfa79d", // movie id
       rating,
       comment,
     };
