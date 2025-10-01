@@ -1,42 +1,58 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TextInput, StyleSheet, Button, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker"; // install: npm install @react-native-picker/picker
+import { createReview } from "../services/backendAPI"; // adjust path if needed
+import { AuthContext } from "../context/AuthContext";
 
 // Tää form screen pitäs saada vastaanottamaan movie id ja movie name -parametrit. Joten kun sitä käytetään se form tehää dynaamisesti.
 export default function FormScreen() {
+  const { token, user } = useContext(AuthContext);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  // Hardcoded movie info
+  const movieId = "680d29f98e8db1ede3dfa79d";
+  const movieTitle = "Movie X";
+
+  const handleSubmit = async () => {
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
       return;
     }
 
-    // Example: handle submission (replace with API call)
-    // Tää pitää kattoo toimimaan dynaamisesti annetun movie id mukaan
     const reviewData = {
-      movie: "680d29f98e8db1ede3dfa79d", // movie id
-      rating,
+      user: user.id,
+      movie: movieId,
+      rating: Number(rating),
       comment,
     };
 
-    console.log("Submitted review:", reviewData);
-    Alert.alert("Success", "Your review has been submitted!");
-
-    // Reset form
-    setRating("");
-    setComment("");
+    setLoading(true);
+    try {
+      const newReview = await createReview(token, reviewData);
+      // const rows = await getAllReviewsByUser(token, user.id);
+      console.log("Review created:", newReview);
+      Alert.alert("Success", "Your review has been submitted!");
+      setRating("");
+      setComment("");
+    } catch (err) {
+      console.error("Error creating review:", err);
+      Alert.alert("Error", "Failed to submit review. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    // Poista top, koska stack navigator lisää oman paddingin jo
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          {/* Tähän pitäs saada se elokuvan nimi */}
-          <Text style={styles.title}>Write a review for{"\n"}Movie X</Text>
+          <Text style={styles.title}>
+            Write a review for{"\n"}
+            {movieTitle}
+          </Text>
 
           <View style={styles.formGroup}>
             <Text style={styles.label}>Rating (1–5):</Text>
@@ -70,7 +86,12 @@ export default function FormScreen() {
           </View>
 
           <View style={styles.formGroup}>
-            <Button title="Submit Review" onPress={handleSubmit} color="#2D64AC" />
+            <Button
+              title={loading ? "Submitting..." : "Submit Review"}
+              onPress={handleSubmit}
+              color="#2D64AC"
+              disabled={loading}
+            />
           </View>
         </View>
       </View>
@@ -122,6 +143,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     backgroundColor: "#fff",
-    textAlignVertical: "top", // for Android multiline
+    textAlignVertical: "top",
   },
 });

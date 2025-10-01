@@ -76,7 +76,7 @@ export const createReview = async (token, reviewData) => {
       },
       body: JSON.stringify(reviewData),
     });
-
+    console.log(res);
     if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
 
     const json = await res.json();
