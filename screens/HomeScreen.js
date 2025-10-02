@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useBottomPadding from "../hooks/useBottomPadding";
+import { AuthContext } from "../context/AuthContext";
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
+  const { user } = useContext(AuthContext);
+
+  // tää tarvii viel jotain
+  const username = user ? user.username : "Guest";
+
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={[styles.container, contentPadding]}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>Welcome, X!</Text>
+          <Text style={styles.title}>Welcome, {username}</Text>
 
           <Text style={styles.paragraph}>
             Here, you can browse the list of films,{"\n"}

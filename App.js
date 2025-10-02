@@ -6,10 +6,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
+import Category from "./screens/Category";
+// Niko laittaa ton päälle ku se on valmis
+// import Profile from "./screens/ProfileScreen";
 import ReviewScreen from "./screens/ReviewScreen";
 import FormScreen from "./screens/FormScreen";
-import Category from "./screens/Category";
-import MovieListScreen from "./screens/MovieList";
+
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import TestScreen from "./screens/TestScreen";
@@ -32,13 +34,14 @@ export default function App() {
               {/* Vaihda tähän initalRouteName mist haluut alottaa */}
               <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Category" component={Category} />
+                {/* Niko laittaa ton päälle ku se on valmis */}
+                {/* <Stack.Screen name="Profile" component={Profile} /> */}
                 <Stack.Screen name="Review" component={ReviewScreen} />
                 <Stack.Screen name="Form" component={FormScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
                 <Stack.Screen name="Test" component={TestScreen} />
-                <Stack.Screen name="Category" component={Category} />
-                <Stack.Screen name="Movies" component={MovieListScreen} />
               </Stack.Navigator>
             </View>
 

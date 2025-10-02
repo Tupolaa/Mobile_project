@@ -24,24 +24,24 @@ export default function Navbar() {
         </TouchableOpacity>
 
         {/* Reviews Screen, for testing only */}
-        <TouchableOpacity onPress={() => handlePress("Review", "review")}>
+        {/* <TouchableOpacity onPress={() => handlePress("Review", "review")}>
           <Home color={active === "review" ? "#2D64AC" : "#a31993ff"} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Form Screen, for testing only */}
-        <TouchableOpacity onPress={() => handlePress("Form", "form")}>
+        {/* <TouchableOpacity onPress={() => handlePress("Form", "form")}>
           <Home color={active === "form" ? "#2D64AC" : "#4ea319ff"} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        {/* <TouchableOpacity onPress={() => handlePress("Search")}>
+        <TouchableOpacity onPress={() => handlePress("Category", "search")}>
           <Search color={active === "search" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handlePress("Discover")}>
+        {/* <TouchableOpacity onPress={() => handlePress("Discover")}>
           <Discover color={active === "discover" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity> */}
 
-        <TouchableOpacity onPress={() => handlePress("Login", "profile")}>
+        <TouchableOpacity onPress={() => handlePress("Profile", "profile")}>
           <Profile color={active === "profile" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
       </View>
