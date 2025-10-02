@@ -15,6 +15,7 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     setMessage("");
     try {
+      console.log(BACKEND_URL);
       const res = await fetch(`${BACKEND_URL}/mobileAuth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
