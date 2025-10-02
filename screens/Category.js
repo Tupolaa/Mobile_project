@@ -135,12 +135,7 @@ export default function GenreScreen() {
       <Text style={styles.noMovies}>No movies found.</Text>
     }
       renderItem={({ item }) => {
-        const posterUrl =
-          item.posters?.length > 0
-            ? `https://image.tmdb.org/t/p/w500${
-                item.posters[Math.floor(Math.random() * item.posters.length)]
-              }`
-            : null;
+        const posterUrl = `https://image.tmdb.org/t/p/w500${item.posters[0]}`;
 
         return (
           <View style={styles.movieCard}>
