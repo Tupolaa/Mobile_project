@@ -5,8 +5,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import MovieListScreen from "./screens/MovieList";
-
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
@@ -43,8 +41,7 @@ export default function App() {
                 >
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Category" component={Category} />
-                  {/* Niko laittaa ton päälle ku se on valmis */}
-                  {/* <Stack.Screen name="Profile" component={Profile} /> */}
+                  <Stack.Screen name="Profile" component={Profile} />
                   <Stack.Screen name="Review" component={ReviewScreen} />
                   <Stack.Screen name="Form" component={FormScreen} />
                   <Stack.Screen name="Login" component={LoginScreen} />

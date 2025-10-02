@@ -10,7 +10,7 @@ import StyledButton from "../components/StyledButton";
 import { AuthContext } from "../context/AuthContext";
 import { FlatList } from "react-native-gesture-handler";
 import ReviewCard from "../components/ReviewCard";
-import { getUserReviews, deleteReview } from "../services/reviewsAPI";
+import { getAllReviewsByUser, deleteReviewById } from "../services/backendAPI";
 
 export default function ProfileScreen({ navigation }) {
   const { user, token, logout } = useContext(AuthContext);
@@ -31,8 +31,8 @@ export default function ProfileScreen({ navigation }) {
 
   const fetchReviews = async () => {
     try {
-      const res = await getUserReviews(user.id, token);
-      setReviews(res.data);
+      const res = await getAllReviewsByUser(token, user.id);
+      setReviews(res);
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +40,7 @@ export default function ProfileScreen({ navigation }) {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      await deleteReview(reviewId, token);
+      await deleteReviewById(token, reviewId);
       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
       handleRefresh(); // Refresh the list after deletion
     } catch (err) {
