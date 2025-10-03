@@ -11,11 +11,14 @@ import { AuthContext } from "../context/AuthContext";
 import { FlatList } from "react-native-gesture-handler";
 import ReviewCard from "../components/ReviewCard";
 import { getAllReviewsByUser, deleteReviewById } from "../services/backendAPI";
+import EditReviewModal from "../components/EditReviewModal";
 
 export default function ProfileScreen({ navigation }) {
   const { user, token, logout } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -41,12 +44,25 @@ export default function ProfileScreen({ navigation }) {
   const handleDeleteReview = async (reviewId) => {
     try {
       await deleteReviewById(token, reviewId);
-      setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
       handleRefresh(); // Refresh the list after deletion
     } catch (err) {
       console.error(err);
     }
   };
+
+  const handleEditReview = (review) => {
+    setSelectedReview(review);
+    console.log("Editing review:", review._id);
+    setIsModalVisible(true);
+  };
+
+  const handleUpdateReview = (updatedReview) => {
+    setReviews((prev) =>
+      prev.map((r) => (r._id === updatedReview._id ? updatedReview : r))
+    );
+  };
+
 
 
   return (
@@ -74,11 +90,18 @@ export default function ProfileScreen({ navigation }) {
             data={reviews}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
-              <ReviewCard review={item} onDelete={handleDeleteReview} />
+              <ReviewCard review={item} onDelete={handleDeleteReview} onEdit={handleEditReview} />
             )}
             ListEmptyComponent={<Text>No reviews yet.</Text>}
             refreshing={refreshing}
             onRefresh={handleRefresh}
+          />
+          <EditReviewModal
+            visible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            review={selectedReview}
+            token={token}
+            onUpdate={handleUpdateReview}
           />
           <StyledButton title="Logout" onPress={logout} style={styles.button} />
         </>

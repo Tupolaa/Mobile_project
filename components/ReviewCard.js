@@ -1,23 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const ReviewCard = ({ review, onDelete }) => {
+const ReviewCard = ({ review, onDelete, onEdit }) => {
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>
-        {review.movie?.title ?? "Unknown movie"}
-      </Text>
+      <Text style={styles.title}>{review.movie?.title ?? "Unknown movie"}</Text>
       <Text style={styles.content}>{review.comment}</Text>
       <Text style={styles.rating}>⭐ {review.rating}</Text>
       <Text style={styles.date}>
         {new Date(review.createdAt).toLocaleDateString()}
       </Text>
 
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => onDelete(review._id)}
-      >
+      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(review._id)}>
         <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.editButton} onPress={() => onEdit(review)}>
+        <Text style={styles.editText}>Edit</Text>
       </TouchableOpacity>
     </View>
   );
@@ -31,7 +29,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     position: "relative",
     borderWidth: 1,
-    borderColor: "#ccc", 
+    borderColor: "#ccc",
   },
   title: { fontSize: 16, fontWeight: "bold" },
   content: { fontSize: 14, marginTop: 4 },
@@ -46,7 +44,17 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
   },
+  editButton: {
+    position: "absolute",
+    right: 80,
+    bottom: 12,
+    backgroundColor: "#2D64AC",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
   deleteText: { color: "#fff", fontWeight: "bold", fontSize: 12 },
+  editText: { color: "#fff", fontWeight: "bold", fontSize: 12 },
 });
 
 export default ReviewCard;
