@@ -5,20 +5,22 @@ import { getAllReviews, getAllReviewsByMovie } from "../services/backendAPI";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReviewItem from "../components/ReviewItem";
 import useBottomPadding from "../hooks/useBottomPadding";
+import { useRoute } from "@react-navigation/native";
 
 // Review screen pitäs saada vastaanottamaan joko (elokuva id + elokuva nimi) tai user id
 export default function ReviewScreen() {
   const contentPadding = useBottomPadding();
   const [reviews, setReviews] = useState([]);
+  const route = useRoute();
 
   // joo
   const loadReviews = async () => {
     try {
       // get all testing
-      const rows = await getAllReviews();
+      //const rows = await getAllReviews();
       // get by movie id testing
-      // const movieId = "680d29f98e8db1ede3dfa796";
-      // const rows = await getAllReviewsByMovie(movieId);
+      const movieId = route.params.movieId;
+      const rows = await getAllReviewsByMovie(movieId);
 
       setReviews(rows);
     } catch (err) {
