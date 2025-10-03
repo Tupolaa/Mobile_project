@@ -113,3 +113,25 @@ export const deleteReviewById = async (token, id) => {
     throw err;
   }
 };
+ // Fetching genres
+ export const fetchGenres = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/genres`);
+      const data = await res.json();
+      return data; // Return the fetched genres
+    } catch (err) {
+      console.error("Fetch genres error:", err);
+      throw err;
+    }
+  };
+// Fetching movies
+export const fetchMovies = async () => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/movies`);
+    const data = await res.json();
+    return data; // Return the fetched movies
+  } catch (err) {
+    console.error("Fetch movies error:", err);
+    throw err;
+  }
+};

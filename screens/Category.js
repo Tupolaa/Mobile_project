@@ -10,6 +10,9 @@ import {
 import { SearchBar } from "react-native-elements";
 import { BACKEND_URL } from "@env";
 import { LogBox } from "react-native";
+import { fetchMovies } from "../services/backendAPI";
+import { fetchGenres } from "../services/backendAPI";
+import { useNavigation } from "@react-navigation/native";
 LogBox.ignoreLogs([
   'React keys must be passed directly to JSX'
 ]);
@@ -19,32 +22,32 @@ export default function GenreScreen() {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [search, setSearch] = useState("");
+  const navigation = useNavigation();
 
   // load genres + all movies on mount
   useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/genres`);
-        const data = await res.json();
-        setGenres(data);
-      } catch (err) {
-        console.error("Fetch genres error:", err);
-      }
-    };
+    const fetchAndSetGenres = async () => {
+    try {
+      const genresData = await fetchGenres(); // Fetch genres
+      setGenres(genresData); // Set genres state
+    } catch (err) {
+      console.error("Fetch genres error:", err);
+    }
+  };
 
-    const fetchMovies = async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/movies`);
-        const data = await res.json();
-        setAllMovies(data);
-        setFilteredMovies(data); 
-      } catch (err) {
-        console.error("Fetch movies error:", err);
-      }
-    };
 
-    fetchGenres();
-    fetchMovies();
+  const fetchAndSetMovies = async () => {
+    try {
+      const moviesData = await fetchMovies(); // Fetch movies
+      setAllMovies(moviesData); // Set all movies state
+      setFilteredMovies(moviesData); // Set filtered movies state
+    } catch (err) {
+      console.error("Fetch movies error:", err);
+    }
+  };
+
+  fetchAndSetGenres();
+  fetchAndSetMovies();
   }, []);
 
  
@@ -132,24 +135,30 @@ export default function GenreScreen() {
       numColumns={3}
       columnWrapperStyle={styles.row}
       ListEmptyComponent={
-      <Text style={styles.noMovies}>No movies found.</Text>
-    }
+        <Text style={styles.noMovies}>No movies found.</Text>
+      }
       renderItem={({ item }) => {
-        const posterUrl = `https://image.tmdb.org/t/p/w500${item.posters[0]}`;
+        const posterUrl = `https://image.tmdb.org/t/p/w500${item.posters[0]}`; 
 
         return (
-          <View style={styles.movieCard}>
-            {posterUrl && (
-              <Image
-                source={{ uri: posterUrl }}
-                style={styles.moviePoster}
-                resizeMode="cover"
-              />
-            )}
-            <Text style={styles.movieTitle} numberOfLines={2}>
-              {item.title}
-            </Text>
-          </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("MovieScreen", { movie: item })}
+    >
+      <View style={styles.movieCard}>
+        {posterUrl ? (
+          <Image
+            source={{ uri: posterUrl }}
+            style={styles.moviePoster}
+            resizeMode="cover"
+          />
+        ) : (
+          <Text style={styles.noPosterText}>No poster found</Text> // Display fallback text
+        )}
+              <Text style={styles.movieTitle} numberOfLines={2}>
+                {item.title}
+              </Text>
+            </View>
+          </TouchableOpacity>
         );
       }}
     />
@@ -204,11 +213,21 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 6
   },
-  movieTitle: {
-    fontSize: 12,
-    fontWeight: "600",
-    textAlign: "center",
-  },
+ movieTitle: {
+  fontSize: 12,
+  fontWeight: "600",
+  textAlign: "center",
+  lineHeight: 16,
+  maxWidth: 100, 
+},
+noPosterText: {
+  fontSize: 14,
+  color: "#888",
+  textAlign: "center",
+  marginTop: 50, // Center the text vertically within the poster area
+  width: 100,
+  height: 150,
+},
   searchBarInput: { backgroundColor: "#eee", borderRadius: 20 },
   searchBarContainer: {
     width: "100%",
