@@ -1,15 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useBottomPadding from "../hooks/useBottomPadding";
 import { AuthContext } from "../context/AuthContext";
+import Carousel from "../components/Carousel";
+import { getRandomRecommendations, getPersonalizedRecommendations } from "../services/backendAPI";
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
   const { user } = useContext(AuthContext);
+  const [movies, setMovies] = useState([]);
 
-  // tää tarvii viel jotain
-  const username = user ? user.username : "Guest";
+  const username = user?.username ?? "Guest";
+
+  // const data = await getPersonalizedRecommendations(token); // no genreIds
+
+  // Tähän vielä se ehtoilu et jos on käyttäjä ladataan personoidut suositukset, jos ei eli guest niin random suositukset
+  const loadRecommendations = async () => {
+    try {
+      const res = await getRandomRecommendations();
+      setMovies(res || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadRecommendations();
+  }, []);
 
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
@@ -23,6 +41,8 @@ export default function HomeScreen() {
             read reviews by other users,{"\n"}
             and—<Text style={styles.bold}>if you'd like to share your own</Text>—register and log in!
           </Text>
+          {/* In here i need to send the movies */}
+          <Carousel movies={movies} />
         </View>
       </View>
     </SafeAreaView>
