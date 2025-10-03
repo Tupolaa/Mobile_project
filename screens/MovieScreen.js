@@ -24,8 +24,8 @@ export default function MovieScreen() {
       <Text style={styles.details}>
         Genre: {movie.genre_names.join(", ") || "N/A"}
       </Text>
-      <StyledButton title="View Reviews" onPress={() => navigation.goBack()} />
-      <StyledButton title="Add Review" onPress={() => navigation.navigate("Review", { movieId: movie._id })} />
+      <StyledButton title="View Reviews" onPress={() => navigation.navigate("Review", { movieId: movie._id, title: movie.title })} />
+      <StyledButton title="Add Review" onPress={() => navigation.navigate("Form", { movieId: movie._id, title: movie.title })} />
     </ScrollView>
   );
 }
