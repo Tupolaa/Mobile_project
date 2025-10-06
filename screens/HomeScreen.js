@@ -8,18 +8,28 @@ import { getRandomRecommendations, getPersonalizedRecommendations } from "../ser
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const [movies, setMovies] = useState([]);
 
+  // if user is not logged in, username-variable is set to "Guest"
   const username = user?.username ?? "Guest";
 
-  // const data = await getPersonalizedRecommendations(token); // no genreIds
-
-  // Tähän vielä se ehtoilu et jos on käyttäjä ladataan personoidut suositukset, jos ei eli guest niin random suositukset
   const loadRecommendations = async () => {
     try {
-      const res = await getRandomRecommendations();
-      setMovies(res || []);
+      // if user is a guest
+      if (username == "Guest") {
+        const res = await getRandomRecommendations();
+        setMovies(res || []);
+      }
+      // if user is logged in as a registered user, so username is not null or undefined
+      else if (user.username != null && user.username != undefined) {
+        // Sit siihen päälle vielä se ehto et jos oli käyttäjä, preferenssit eli genret haetaan SQLiten tietokannasta
+        // Genre IDs pitää olla arrayssa
+        // const genreIds = SQLite tietokannasta;
+        // const res = await getPersonalizedRecommendations(token, genreIds);
+        const res = await getPersonalizedRecommendations(token);
+        setMovies(res || []);
+      }
     } catch (err) {
       console.error(err);
     }
