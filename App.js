@@ -12,7 +12,7 @@ import Category from "./screens/Category";
 import Profile from "./screens/ProfileScreen";
 import ReviewScreen from "./screens/ReviewScreen";
 import FormScreen from "./screens/FormScreen";
-
+import MovieScreen from "./screens/MovieScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import TestScreen from "./screens/TestScreen";
@@ -41,6 +41,7 @@ export default function App() {
                   <Stack.Screen name="Review" component={ReviewScreen} />
                   <Stack.Screen name="Form" component={FormScreen} />
                   <Stack.Screen name="Login" component={LoginScreen} />
+                  <Stack.Screen name="MovieScreen" component={MovieScreen} />
                   <Stack.Screen name="Register" component={RegisterScreen} />
                   <Stack.Screen name="Test" component={TestScreen} />
                 </Stack.Navigator>

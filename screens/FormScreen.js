@@ -4,18 +4,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker"; // install: npm install @react-native-picker/picker
 import { createReview } from "../services/backendAPI"; // adjust path if needed
 import { AuthContext } from "../context/AuthContext";
+import { useRoute } from "@react-navigation/native";  
 
 // Tää form screen pitäs saada vastaanottamaan movie id ja movie name -parametrit. Joten kun sitä käytetään se form tehää dynaamisesti.
-export default function FormScreen() {
+export default function FormScreen({ movieId, title, onClose }) {
   const { token, user } = useContext(AuthContext);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const route = useRoute();
   // Hardcoded movie info
-  const movieId = "680d29f98e8db1ede3dfa79d";
-  const movieTitle = "Movie X";
-
+  //const movieId = "680d29f98e8db1ede3dfa79d";
+  //const movieTitle = "Movie X";
+   //const movieId = route.params.movieId;
+  //const movieTitle = route.params.title;
   const handleSubmit = async () => {
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
@@ -28,7 +31,9 @@ export default function FormScreen() {
       rating: Number(rating),
       comment,
     };
-
+  console.log("Movie ID:", movieId);
+  console.log("Movie Title:", title);
+   
     setLoading(true);
     try {
       const newReview = await createReview(token, reviewData);
@@ -51,7 +56,7 @@ export default function FormScreen() {
         <View style={styles.contentContainer}>
           <Text style={styles.title}>
             Write a review for{"\n"}
-            {movieTitle}
+            {title}
           </Text>
 
           <View style={styles.formGroup}>
