@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useRoute } from "@react-navigation/native";  
 
 // Tää form screen pitäs saada vastaanottamaan movie id ja movie name -parametrit. Joten kun sitä käytetään se form tehää dynaamisesti.
-export default function FormScreen() {
+export default function FormScreen({ movieId, movieTitle, onClose }) {
   const { token, user } = useContext(AuthContext);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
@@ -17,8 +17,8 @@ export default function FormScreen() {
   // Hardcoded movie info
   //const movieId = "680d29f98e8db1ede3dfa79d";
   //const movieTitle = "Movie X";
-  const movieId = route.params.movieId;
-  const movieTitle = route.params.title;
+  //const movieId = route.params.movieId;
+  //const movieTitle = route.params.title;
   const handleSubmit = async () => {
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
