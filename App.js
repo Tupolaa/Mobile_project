@@ -9,7 +9,6 @@ import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./context/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
 import Category from "./screens/Category";
-// Niko laittaa ton päälle ku se on valmis
 import Profile from "./screens/ProfileScreen";
 import ReviewScreen from "./screens/ReviewScreen";
 import FormScreen from "./screens/FormScreen";
@@ -35,10 +34,7 @@ export default function App() {
               <Logo name="CRITIQ" />
               <View style={styles.stackContainer}>
                 {/* Vaihda tähän initalRouteName mist haluut alottaa */}
-                <Stack.Navigator
-                  initialRouteName="Home"
-                  screenOptions={{ headerShown: false }}
-                >
+                <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Category" component={Category} />
                   <Stack.Screen name="Profile" component={Profile} />
