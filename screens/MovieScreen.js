@@ -3,16 +3,13 @@ import { View, Text, Image, StyleSheet, ScrollView, } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import StyledButton from "../components/StyledButton";
 import { useNavigation } from "@react-navigation/native";
-import FormScreen from "./FormScreen";
 
 export default function MovieScreen() {
   const route = useRoute();
   const { movie } = route.params; 
   const navigation = useNavigation();
-  const [formVisible, setFormVisible] = useState(false);
-  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.posters[0]}`;
 
-  
+  const posterUrl = `https://image.tmdb.org/t/p/w500${movie.posters[0]}`;
  //console.log(movie);
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -28,19 +25,7 @@ export default function MovieScreen() {
         Genre: {movie.genre_names.join(", ") || "N/A"}
       </Text>
       <StyledButton title="View Reviews" onPress={() => navigation.navigate("Review", { movieId: movie._id, title: movie.title })} />
-      <StyledButton title="Add Review" onPress={() => setFormVisible(true)} />
-     <Modal
-        visible={formVisible}
-        animationType="slide"
-        onRequestClose={() => setFormVisible(false)}
-      >
-        {/* Pass movie info as props */}
-        <FormScreen
-          movieId={movieId}
-          title={title}
-          onClose={() => setFormVisible(false)}
-        />
-      </Modal>
+      <StyledButton title="Add Review" onPress={() => navigation.navigate("Form", { movieId: movie._id, title: movie.title })} />
     </ScrollView>
   );
 }
