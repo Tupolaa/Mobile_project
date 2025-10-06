@@ -38,9 +38,9 @@ export default function GenreScreen() {
 
   const fetchAndSetMovies = async () => {
     try {
-      const moviesData = await fetchMovies(); // Fetch movies
-      setAllMovies(moviesData); // Set all movies state
-      setFilteredMovies(moviesData); // Set filtered movies state
+      const moviesData = await fetchMovies(); 
+      setAllMovies(moviesData); 
+      setFilteredMovies(moviesData); 
     } catch (err) {
       console.error("Fetch movies error:", err);
     }
