@@ -1,15 +1,43 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useBottomPadding from "../hooks/useBottomPadding";
 import { AuthContext } from "../context/AuthContext";
+import Carousel from "../components/Carousel";
+import { getRandomRecommendations, getPersonalizedRecommendations } from "../services/backendAPI";
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
+  const [movies, setMovies] = useState([]);
 
-  // tää tarvii viel jotain
-  const username = user ? user.username : "Guest";
+  // if user is not logged in, username-variable is set to "Guest"
+  const username = user?.username ?? "Guest";
+
+  const loadRecommendations = async () => {
+    try {
+      // if user is a guest
+      if (username == "Guest") {
+        const res = await getRandomRecommendations();
+        setMovies(res || []);
+      }
+      // if user is logged in as a registered user, so username is not null or undefined
+      else if (user.username != null && user.username != undefined) {
+        // Sit siihen päälle vielä se ehto et jos oli käyttäjä, preferenssit eli genret haetaan SQLiten tietokannasta
+        // Genre IDs pitää olla arrayssa
+        // const genreIds = SQLite tietokannasta;
+        // const res = await getPersonalizedRecommendations(token, genreIds);
+        const res = await getPersonalizedRecommendations(token);
+        setMovies(res || []);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    loadRecommendations();
+  }, []);
 
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
@@ -23,6 +51,8 @@ export default function HomeScreen() {
             read reviews by other users,{"\n"}
             and—<Text style={styles.bold}>if you'd like to share your own</Text>—register and log in!
           </Text>
+          {/* In here i need to send the movies */}
+          <Carousel movies={movies} />
         </View>
       </View>
     </SafeAreaView>
