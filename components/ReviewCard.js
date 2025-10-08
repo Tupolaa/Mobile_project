@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 const ReviewCard = ({ review, onDelete, onEdit }) => {
   return (
@@ -8,13 +8,35 @@ const ReviewCard = ({ review, onDelete, onEdit }) => {
       <Text style={styles.content}>{review.comment}</Text>
       <Text style={styles.rating}>⭐ {review.rating}</Text>
       <Text style={styles.date}>
-        {new Date(review.createdAt).toLocaleDateString()}
+        {new Date(review.updatedAt ?? review.createdAt).toLocaleDateString('en-GB')}
       </Text>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(review._id)}>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() =>
+          Alert.alert(
+            "Confirm Delete",
+            "Are you sure you want to delete this review?",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Delete",
+                style: "destructive",
+                onPress: () => onDelete(review._id),
+              },
+            ]
+          )
+        }
+      >
         <Text style={styles.deleteText}>Delete</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.editButton} onPress={() => onEdit(review)}>
+      <TouchableOpacity
+        style={styles.editButton}
+        onPress={() => onEdit(review)}
+      >
         <Text style={styles.editText}>Edit</Text>
       </TouchableOpacity>
     </View>

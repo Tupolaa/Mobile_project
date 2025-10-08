@@ -1,4 +1,4 @@
-import React, { use, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,13 @@ import { FlatList } from "react-native-gesture-handler";
 import ReviewCard from "../components/ReviewCard";
 import { getAllReviewsByUser, deleteReviewById } from "../services/backendAPI";
 import EditReviewModal from "../components/EditReviewModal";
+import { fetchGenres } from "../services/backendAPI";
+import {
+  getUserGenres,
+  saveUserGenre,
+  removeUserGenre,
+} from "../storage/genrePreferences";
+import GenrePreferencesModal from "../components/GenrePreferencesModal";
 
 export default function ProfileScreen({ navigation }) {
   const { user, token, logout } = useContext(AuthContext);
@@ -19,12 +26,30 @@ export default function ProfileScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [genresModalVisible, setGenresModalVisible] = useState(false);
 
   useEffect(() => {
     if (user) {
       fetchReviews();
+      loadGenresAndPreferences();
     }
   }, [user]);
+
+  // Loads genres and user preferences from SQLite database locally
+  const loadGenresAndPreferences = async () => {
+    try {
+      const fetched = await fetchGenres();
+      setGenres(fetched);
+
+      if (user?.id) {
+        getUserGenres(user.id, setSelectedGenres);
+      }
+    } catch (err) {
+      console.error("Error loading genres or preferences:", err);
+    }
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -63,8 +88,6 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
-
-
   return (
     <View style={styles.container}>
       {!user ? (
@@ -84,13 +107,25 @@ export default function ProfileScreen({ navigation }) {
       ) : (
         <>
           <Text style={styles.text}>Welcome, {user.username}!</Text>
+          <StyledButton
+            title="Select Preferred Genres"
+            onPress={() => setGenresModalVisible(true)}
+            style={styles.button}
+          />
           <FlatList
             style={{ flex: 1, width: "100%" }}
-            contentContainerStyle={[reviews.length === 0 && styles.center, { flexGrow: 1 }]}
+            contentContainerStyle={[
+              reviews.length === 0 && styles.center,
+              { flexGrow: 1 },
+            ]}
             data={reviews}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
-              <ReviewCard review={item} onDelete={handleDeleteReview} onEdit={handleEditReview} />
+              <ReviewCard
+                review={item}
+                onDelete={handleDeleteReview}
+                onEdit={handleEditReview}
+              />
             )}
             ListEmptyComponent={<Text>No reviews yet.</Text>}
             refreshing={refreshing}
@@ -102,6 +137,14 @@ export default function ProfileScreen({ navigation }) {
             review={selectedReview}
             token={token}
             onUpdate={handleUpdateReview}
+          />
+          <GenrePreferencesModal
+            visible={genresModalVisible}
+            onClose={() => setGenresModalVisible(false)}
+            userId={user.id}
+            genres={genres}
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
           />
           <StyledButton title="Logout" onPress={logout} style={styles.button} />
         </>
