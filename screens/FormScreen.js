@@ -1,24 +1,35 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+  ScrollView,
+  
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Picker } from "@react-native-picker/picker"; // install: npm install @react-native-picker/picker
-import { createReview } from "../services/backendAPI"; // adjust path if needed
+import { Picker } from "@react-native-picker/picker";
+import { createReview } from "../services/backendAPI";
 import { AuthContext } from "../context/AuthContext";
-import { useRoute } from "@react-navigation/native";  
+import { useRoute } from "@react-navigation/native";
 
-// Tää form screen pitäs saada vastaanottamaan movie id ja movie name -parametrit. Joten kun sitä käytetään se form tehää dynaamisesti.
+
 export default function FormScreen({ movieId, title, onClose }) {
   const { token, user } = useContext(AuthContext);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const route = useRoute();
-  // Hardcoded movie info
-  //const movieId = "680d29f98e8db1ede3dfa79d";
-  //const movieTitle = "Movie X";
-   //const movieId = route.params.movieId;
-  //const movieTitle = route.params.title;
+
   const handleSubmit = async () => {
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
@@ -31,13 +42,13 @@ export default function FormScreen({ movieId, title, onClose }) {
       rating: Number(rating),
       comment,
     };
-  console.log("Movie ID:", movieId);
-  console.log("Movie Title:", title);
-   
+
+    console.log("Movie ID:", movieId);
+    console.log("Movie Title:", title);
+
     setLoading(true);
     try {
       const newReview = await createReview(token, reviewData);
-      // const rows = await getAllReviewsByUser(token, user.id);
       console.log("Review created:", newReview);
       Alert.alert("Success", "Your review has been submitted!");
       setRating("");
@@ -49,57 +60,94 @@ export default function FormScreen({ movieId, title, onClose }) {
       setLoading(false);
     }
   };
+  const showAlert = () =>
+  Alert.alert(
+    'Log in error',
+    'You need to be logged in to write a review.',
+    [
+      {
+        text: 'Log in',
+        onPress: () => navigation.navigate('Profile'),
+        style: 'default',
+      },
+    ],
+    
+  );
+
+  const handlePress = () => {
+    if (user) {
+      handleSubmit();
+    } else {
+      showAlert();
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
-      <View style={styles.container}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>
-            Write a review for{"\n"}
-            {title}
-          </Text>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"} // 👈 Pushes whole view up
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.contentContainer}>
+              <Text style={styles.title}>
+                Write a review for{"\n"}
+                {title}
+              </Text>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Rating (1–5):</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={rating}
-                onValueChange={(itemValue) => setRating(itemValue)}
-                style={styles.picker}
-                prompt="Select rating"
-              >
-                <Picker.Item label="Select rating" value="" />
-                <Picker.Item label="⭐" value="1" />
-                <Picker.Item label="⭐⭐" value="2" />
-                <Picker.Item label="⭐⭐⭐" value="3" />
-                <Picker.Item label="⭐⭐⭐⭐" value="4" />
-                <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
-              </Picker>
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Rating (1–5):</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={rating}
+                    onValueChange={(itemValue) => setRating(itemValue)}
+                    style={styles.picker}
+                    prompt="Select rating"
+                  >
+                    <Picker.Item label="Select rating" value="" />
+                    <Picker.Item label="⭐" value="1" />
+                    <Picker.Item label="⭐⭐" value="2" />
+                    <Picker.Item label="⭐⭐⭐" value="3" />
+                    <Picker.Item label="⭐⭐⭐⭐" value="4" />
+                    <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+                  </Picker>
+                </View>
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Comment:</Text>
+                <TextInput
+                  style={styles.textarea}
+                  multiline
+                  numberOfLines={4}
+                  placeholder="Write your review..."
+                  value={comment}
+                  onChangeText={setComment}
+                  textAlignVertical="top"
+                  disableFullscreenUI={true} // 👈 prevents Android “separate writing view”
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Button
+                  title={loading ? "Submitting..." : "Submit Review"}
+                  onPress={handlePress}
+                  color="#2D64AC"
+                  disabled={loading}
+                />
+                
+              </View>
+
+             
             </View>
-          </View>
-
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Comment:</Text>
-            <TextInput
-              style={styles.textarea}
-              multiline
-              numberOfLines={4}
-              placeholder="Write your review..."
-              value={comment}
-              onChangeText={setComment}
-            />
-          </View>
-
-          <View style={styles.formGroup}>
-            <Button
-              title={loading ? "Submitting..." : "Submit Review"}
-              onPress={handleSubmit}
-              color="#2D64AC"
-              disabled={loading}
-            />
-          </View>
-        </View>
-      </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -109,18 +157,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
   },
-  container: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
     backgroundColor: "#E2E2E2",
   },
   contentContainer: {
-    padding: 20,
+    flex: 1,
+    alignSelf: "center",
+    borderRadius: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingTop: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#2D64AC",
+    textAlign: "center",
   },
   formGroup: {
     marginBottom: 20,
@@ -139,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   picker: {
-    height: 50,
+    height: 60,
     width: "100%",
   },
   textarea: {
@@ -147,7 +202,7 @@ const styles = StyleSheet.create({
     borderColor: "#424242",
     borderRadius: 5,
     padding: 10,
+    height: 120,
     backgroundColor: "#fff",
-    textAlignVertical: "top",
   },
 });

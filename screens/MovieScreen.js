@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   position: "absolute",
   bottom: 0,
   width: "100%",
-  height: "50%", // half screen height
+  height: "65%", // half screen height
   backgroundColor: "#fff",
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
