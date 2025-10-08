@@ -6,16 +6,14 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  TextInput,
 } from "react-native";
-import { SearchBar } from "react-native-elements";
-import { BACKEND_URL } from "@env";
 import { LogBox } from "react-native";
-import { fetchMovies } from "../services/backendAPI";
-import { fetchGenres } from "../services/backendAPI";
+import { fetchMovies, fetchGenres } from "../services/backendAPI";
 import { useNavigation } from "@react-navigation/native";
-LogBox.ignoreLogs([
-  'React keys must be passed directly to JSX'
-]);
+
+LogBox.ignoreLogs(["React keys must be passed directly to JSX"]);
+
 export default function GenreScreen() {
   const [genres, setGenres] = useState([]);
   const [allMovies, setAllMovies] = useState([]);
@@ -24,50 +22,26 @@ export default function GenreScreen() {
   const [search, setSearch] = useState("");
   const navigation = useNavigation();
 
-  // load genres + all movies on mount
+  
   useEffect(() => {
-    const fetchAndSetGenres = async () => {
-    try {
-      const genresData = await fetchGenres(); // Fetch genres
-      setGenres(genresData); // Set genres state
-    } catch (err) {
-      console.error("Fetch genres error:", err);
-    }
-  };
-
-
-  const fetchAndSetMovies = async () => {
-    try {
-      const moviesData = await fetchMovies(); 
-      setAllMovies(moviesData); 
-      setFilteredMovies(moviesData); 
-    } catch (err) {
-      console.error("Fetch movies error:", err);
-    }
-  };
-
-  fetchAndSetGenres();
-  fetchAndSetMovies();
+    const fetchData = async () => {
+      try {
+        const [genresData, moviesData] = await Promise.all([
+          fetchGenres(),
+          fetchMovies(),
+        ]);
+        setGenres(genresData);
+        setAllMovies(moviesData);
+        setFilteredMovies(moviesData);
+      } catch (err) {
+        console.error("Fetch data error:", err);
+      }
+    };
+    fetchData();
   }, []);
 
- 
-  const handlePress = (name) => {
-    setSelectedGenre(name);
-    setSearch("");
-
-   
-    const filtered = allMovies.filter((movie) => {
-      const genreNames = movie.genre_names || []; 
-      return genreNames.includes(name);
-    });
-
-    setFilteredMovies(filtered);
-  };
-
   
-  const updateSearch = (text) => {
-    setSearch(text);
-
+  useEffect(() => {
     const baseList =
       selectedGenre === null
         ? allMovies
@@ -76,38 +50,40 @@ export default function GenreScreen() {
           );
 
     const searched = baseList.filter((m) =>
-      m.title.toLowerCase().includes(text.toLowerCase())
+      m.title.toLowerCase().includes(search.toLowerCase())
     );
 
     setFilteredMovies(searched);
+  }, [search, selectedGenre, allMovies]);
+
+  const handlePress = (name) => {
+    setSelectedGenre(name);
+    setSearch("");
   };
 
   const renderHeader = () => (
     <View>
       <Text style={styles.heading}>Choose a Genre</Text>
-      <SearchBar
-        containerStyle={styles.searchBarContainer}
-        inputContainerStyle={styles.searchBarInput}
-        placeholder="Search movies..."
-        onChangeText={updateSearch}
+
+      <TextInput
+        style={styles.input}
+        placeholder="Search..."
         value={search}
-        lightTheme
-        round
+        onChangeText={(text) => setSearch(text)}
       />
+
       <View style={styles.buttonWrap}>
         <TouchableOpacity
-          style={[
-            styles.button,
-            selectedGenre === null && styles.activeButton,
-          ]}
+          style={[styles.button, selectedGenre === null && styles.activeButton]}
           onPress={() => {
             setSelectedGenre(null);
             setSearch("");
-            setFilteredMovies(allMovies); 
+            setFilteredMovies(allMovies);
           }}
         >
           <Text style={styles.buttonText}>All</Text>
         </TouchableOpacity>
+
         {genres.map((g) => (
           <TouchableOpacity
             key={g.id}
@@ -121,6 +97,7 @@ export default function GenreScreen() {
           </TouchableOpacity>
         ))}
       </View>
+
       <Text style={styles.subHeading}>
         {selectedGenre ? `${selectedGenre} Movies` : "All Movies"}
       </Text>
@@ -138,22 +115,24 @@ export default function GenreScreen() {
         <Text style={styles.noMovies}>No movies found.</Text>
       }
       renderItem={({ item }) => {
-        const posterUrl = `https://image.tmdb.org/t/p/w500${item.posters[0]}`; 
+        const posterUrl = item.posters?.[0]
+          ? `https://image.tmdb.org/t/p/w500${item.posters[0]}`
+          : null;
 
         return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate("MovieScreen", { movie: item })}
-    >
-      <View style={styles.movieCard}>
-        {posterUrl ? (
-          <Image
-            source={{ uri: posterUrl }}
-            style={styles.moviePoster}
-            resizeMode="cover"
-          />
-        ) : (
-          <Text style={styles.noPosterText}>No poster found</Text> // Display fallback text
-        )}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("MovieScreen", { movie: item })}
+          >
+            <View style={styles.movieCard}>
+              {posterUrl ? (
+                <Image
+                  source={{ uri: posterUrl }}
+                  style={styles.moviePoster}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Text style={styles.noPosterText}>No poster found</Text>
+              )}
               <Text style={styles.movieTitle} numberOfLines={2}>
                 {item.title}
               </Text>
@@ -164,7 +143,6 @@ export default function GenreScreen() {
     />
   );
 }
-
 const styles = StyleSheet.create({
   heading: { fontSize: 22, 
   marginBottom: 16,

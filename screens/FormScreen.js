@@ -11,18 +11,22 @@ import {
   Keyboard,
   Platform,
   ScrollView,
+  
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { createReview } from "../services/backendAPI";
 import { AuthContext } from "../context/AuthContext";
 import { useRoute } from "@react-navigation/native";
 
+
 export default function FormScreen({ movieId, title, onClose }) {
   const { token, user } = useContext(AuthContext);
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const route = useRoute();
 
@@ -54,6 +58,27 @@ export default function FormScreen({ movieId, title, onClose }) {
       Alert.alert("Error", "Failed to submit review. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+  const showAlert = () =>
+  Alert.alert(
+    'Log in error',
+    'You need to be logged in to write a review.',
+    [
+      {
+        text: 'Log in',
+        onPress: () => navigation.navigate('Profile'),
+        style: 'cancel',
+      },
+    ],
+    
+  );
+
+  const handlePress = () => {
+    if (user) {
+      handleSubmit();
+    } else {
+      showAlert();
     }
   };
 
@@ -111,10 +136,11 @@ export default function FormScreen({ movieId, title, onClose }) {
               <View style={styles.formGroup}>
                 <Button
                   title={loading ? "Submitting..." : "Submit Review"}
-                  onPress={handleSubmit}
+                  onPress={handlePress}
                   color="#2D64AC"
                   disabled={loading}
                 />
+                
               </View>
 
              
