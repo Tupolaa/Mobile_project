@@ -1,17 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { updateReviewById } from "../services/backendAPI";
+import Slider from "@react-native-community/slider";
 
-export default function EditReviewModal({ visible, onClose, review, token, onUpdate }) {
+export default function EditReviewModal({
+  visible,
+  onClose,
+  review,
+  token,
+  onUpdate,
+}) {
   const [text, setText] = useState(review?.comment || "");
+  const [rating, setRating] = useState(review?.rating || 0);
 
   useEffect(() => {
     setText(review?.comment || "");
+    setRating(review?.rating || 0);
   }, [review]);
 
   const handleSave = async () => {
     try {
-      const updated = await updateReviewById(token, review._id, { comment: text });
+      const updated = await updateReviewById(token, review._id, {
+        comment: text,
+        rating,
+      });
       onUpdate(updated);
       onClose();
     } catch (err) {
@@ -29,6 +48,19 @@ export default function EditReviewModal({ visible, onClose, review, token, onUpd
           <Text style={styles.subHeader}>
             {`Movie: ${review.movie?.title ?? "Unknown"}`}
           </Text>
+
+          <Text style={styles.label}>Your Rating: {rating}</Text>
+          <Slider
+            style={{ width: "100%", height: 40 }}
+            minimumValue={1}
+            maximumValue={5}
+            step={1}
+            value={rating}
+            onValueChange={setRating}
+            minimumTrackTintColor="#4CAF50"
+            maximumTrackTintColor="#ccc"
+          />
+
           <Text style={styles.label}>Your Comment:</Text>
           <TextInput
             style={styles.input}
@@ -38,10 +70,16 @@ export default function EditReviewModal({ visible, onClose, review, token, onUpd
             placeholder="Write your review..."
           />
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={onClose}
+            >
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
+            <TouchableOpacity
+              style={[styles.button, styles.saveButton]}
+              onPress={handleSave}
+            >
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
           </View>
