@@ -5,6 +5,7 @@ import useBottomPadding from "../hooks/useBottomPadding";
 import { AuthContext } from "../context/AuthContext";
 import Carousel from "../components/Carousel";
 import { getRandomRecommendations, getPersonalizedRecommendations } from "../services/backendAPI";
+// import { getUserGenres } from "../storage/genrePreferences";
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
@@ -27,9 +28,8 @@ export default function HomeScreen() {
 
       // if user is logged in
       if (user != null || user != undefined) {
-        // Sit siihen päälle vielä se ehto et jos oli käyttäjä, preferenssit eli genret haetaan SQLiten tietokannasta
-        // Genre IDs pitää olla arrayssa
-        // const genreIds = SQLite tietokannasta;
+        // const genreIds = await getUserGenres(user.id);
+        // console.log("User preferred genres:", genreIds);
         // const res = await getPersonalizedRecommendations(token, genreIds);
         const res = await getPersonalizedRecommendations(token);
         setMovies(res || []);
