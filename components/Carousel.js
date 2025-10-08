@@ -19,10 +19,8 @@ export default function Carousel({ movies }) {
         data={movies}
         keyExtractor={(_, index) => index.toString()}
         horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
-        snapToInterval={width}
         decelerationRate="fast"
         getItemLayout={(data, index) => ({ length: width, offset: width * index, index })}
         renderItem={({ item }) => {
@@ -46,11 +44,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
-  image: {
-    width: width,
-    height: 200,
-    resizeMode: "cover",
-  },
+
   movieCard: {
     flex: 1,
     margin: 5,
@@ -60,8 +54,8 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   moviePoster: {
-    width: 100,
-    height: 150,
+    width: 200,
+    height: 350,
     borderRadius: 6,
     marginBottom: 6,
   },

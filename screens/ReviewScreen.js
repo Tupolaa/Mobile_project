@@ -38,7 +38,7 @@ export default function ReviewScreen() {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           {/* Tähän pitäs saada se elokuvan nimi */}
-          <Text style={styles.title}>Movie X{"\n"}Reviews</Text>
+          <Text style={styles.title}>{route.params.title}{"\n"}Reviews</Text>
           <FlatList
             data={reviews}
             keyExtractor={(item) => item._id}
