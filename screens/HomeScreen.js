@@ -8,36 +8,56 @@ import { getRandomRecommendations, getPersonalizedRecommendations } from "../ser
 
 export default function HomeScreen() {
   const contentPadding = useBottomPadding();
-  const { user, token } = useContext(AuthContext);
+  const { user, token, loading } = useContext(AuthContext);
   const [movies, setMovies] = useState([]);
+  const [username, setUsername] = useState();
 
-  // if user is not logged in, username-variable is set to "Guest"
-  const username = user?.username ?? "Guest";
+  // Run whenever user/token changes and after loading finishes
+  useEffect(() => {
+    if (!loading) {
+      loadRecommendations();
+    }
+  }, [user, token, loading]);
 
   const loadRecommendations = async () => {
     try {
-      // if user is a guest
-      if (username == "Guest") {
-        const res = await getRandomRecommendations();
-        setMovies(res || []);
-      }
-      // if user is logged in as a registered user, so username is not null or undefined
-      else if (user.username != null && user.username != undefined) {
+      console.log("--------------------------------------------");
+      console.log("username:", username);
+      console.log("user:", user);
+
+      // if user is logged in
+      if (user != null || user != undefined) {
         // Sit siihen päälle vielä se ehto et jos oli käyttäjä, preferenssit eli genret haetaan SQLiten tietokannasta
         // Genre IDs pitää olla arrayssa
         // const genreIds = SQLite tietokannasta;
         // const res = await getPersonalizedRecommendations(token, genreIds);
         const res = await getPersonalizedRecommendations(token);
         setMovies(res || []);
+        setUsername(user.username);
       }
+      // if user is a guest
+      else if (user == null || user == undefined || username == "Guest") {
+        const res = await getRandomRecommendations();
+        setMovies(res || []);
+        setUsername("Guest");
+      }
+      console.log("--------------------------------------------");
     } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(() => {
-    loadRecommendations();
-  }, []);
+  // Loading state
+  if (loading || username == null) {
+    // Optional: show a loading spinner or placeholder
+    return (
+      <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
+        <View style={[styles.container, contentPadding, { justifyContent: "center", alignItems: "center" }]}>
+          <Text style={styles.title}>Loading...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     // Poista top, koska stack navigator lisää oman paddingin jo
@@ -69,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignContent: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "#E2E2E2",
   },
   contentContainer: {
