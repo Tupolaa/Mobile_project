@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignContent: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "#E2E2E2",
   },
   contentContainer: {
