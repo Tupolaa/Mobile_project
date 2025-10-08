@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     borderColor: "#424242",
     borderRadius: 5,
     padding: 10,
+    height: 100,
     backgroundColor: "#fff",
     textAlignVertical: "top",
   },
