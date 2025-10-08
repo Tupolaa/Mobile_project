@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null); //user.id , user.role
+  const [user, setUser] = useState(null); //user.id , user.role, user.username
   const [loading, setLoading] = useState(true);
 
   // Load token on app start

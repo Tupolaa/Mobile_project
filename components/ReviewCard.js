@@ -8,7 +8,7 @@ const ReviewCard = ({ review, onDelete, onEdit }) => {
       <Text style={styles.content}>{review.comment}</Text>
       <Text style={styles.rating}>⭐ {review.rating}</Text>
       <Text style={styles.date}>
-        {new Date(review.createdAt).toLocaleDateString()}
+        {new Date(review.updatedAt ?? review.createdAt).toLocaleDateString('en-GB')}
       </Text>
 
       <TouchableOpacity
