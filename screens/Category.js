@@ -11,6 +11,7 @@ import {
 import { LogBox } from "react-native";
 import { fetchMovies, fetchGenres } from "../services/backendAPI";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 LogBox.ignoreLogs(["React keys must be passed directly to JSX"]);
 
@@ -63,15 +64,18 @@ export default function GenreScreen() {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.heading}>Choose a Genre</Text>
-
+    <Text style={styles.heading}>Choose a Genre</Text>
+      <View style={[styles.searchBarContainer, styles.searchBarInput]}>
+      <Ionicons name="search" size={20} color="#555" style={styles.searchIcon} />
       <TextInput
         style={styles.input}
         placeholder="Search..."
         value={search}
         onChangeText={(text) => setSearch(text)}
+        onSubmitEditing={() => setSearch(search)} 
+        returnKeyType="search"
       />
-
+    </View>
       <View style={styles.buttonWrap}>
         <TouchableOpacity
           style={[styles.button, selectedGenre === null && styles.activeButton]}
@@ -105,8 +109,9 @@ export default function GenreScreen() {
   );
 
   return (
+    <View>
+      {renderHeader()}
     <FlatList
-      ListHeaderComponent={renderHeader}
       data={filteredMovies}
       keyExtractor={(item) => item._id}
       numColumns={3}
@@ -141,6 +146,7 @@ export default function GenreScreen() {
         );
       }}
     />
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -154,6 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center"
   },
+  
   buttonWrap: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -165,6 +172,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16
   },
+  searchIcon: {
+  marginRight: 5,
+  marginTop: 8
+},
   button: {
     backgroundColor: "#007bff",
     paddingVertical: 7,
@@ -206,12 +217,15 @@ noPosterText: {
   width: 100,
   height: 150,
 },
-  searchBarInput: { backgroundColor: "#eee", borderRadius: 20 },
+  
   searchBarContainer: {
     width: "100%",
     marginBottom: 10,
     backgroundColor: "transparent",
     borderTopWidth: 0,
     borderBottomWidth: 0,
+    alignItems: "flex-start",
+    flexDirection: "row",
+    
   },
 });

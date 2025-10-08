@@ -68,7 +68,7 @@ export default function FormScreen({ movieId, title, onClose }) {
       {
         text: 'Log in',
         onPress: () => navigation.navigate('Profile'),
-        style: 'cancel',
+        style: 'default',
       },
     ],
     
