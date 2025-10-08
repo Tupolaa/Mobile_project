@@ -64,7 +64,7 @@ export default function GenreScreen() {
 
   const renderHeader = () => (
     <View>
-    <Text style={styles.heading}>Choose a Genre</Text>
+    
       <View style={[styles.searchBarContainer, styles.searchBarInput]}>
       <Ionicons name="search" size={20} color="#555" style={styles.searchIcon} />
       <TextInput
@@ -76,6 +76,7 @@ export default function GenreScreen() {
         returnKeyType="search"
       />
     </View>
+    <Text style={styles.heading}>Choose a Genre</Text>
       <View style={styles.buttonWrap}>
         <TouchableOpacity
           style={[styles.button, selectedGenre === null && styles.activeButton]}
@@ -152,7 +153,9 @@ export default function GenreScreen() {
 const styles = StyleSheet.create({
   heading: { fontSize: 22, 
   marginBottom: 16,
-  fontWeight: "bold"
+  fontWeight: "bold",
+  alignSelf: "center",
+  marginTop: 5
 },
   subHeading: {
     fontSize: 18,
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 8,
-    margin: 6,
+    margin: 4,
   },
   activeButton: {
     backgroundColor: "#0056b3",
@@ -217,7 +220,12 @@ noPosterText: {
   width: 100,
   height: 150,
 },
-  
+input: {
+    flex: 1,
+    height: 40,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+  },
   searchBarContainer: {
     width: "100%",
     marginBottom: 10,
@@ -226,6 +234,7 @@ noPosterText: {
     borderBottomWidth: 0,
     alignItems: "flex-start",
     flexDirection: "row",
+    marginTop: 10,
     
   },
 });
