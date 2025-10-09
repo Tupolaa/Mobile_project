@@ -1,12 +1,5 @@
 import React, { use, useState, useContext } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { View, TextInput, Button, Text, StyleSheet, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
 import { BACKEND_URL } from "@env";
@@ -32,12 +25,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
+      <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={styles.input} />
       <TextInput
         placeholder="Password"
         value={password}
@@ -46,16 +34,13 @@ export default function LoginScreen({ navigation }) {
         secureTextEntry
       />
       <StyledButton title="Login" onPress={handleLogin} />
-      <StyledButton
-        title="Go to Register"
-        onPress={() => navigation.navigate("Register")}
-      />
+      <StyledButton title="Go to Register" onPress={() => navigation.navigate("Register")} />
       <Text>{message}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1, justifyContent: "center" },
+  container: { padding: 20, flex: 1, justifyContent: "center", backgroundColor: "#E2E2E2" },
   input: { borderWidth: 1, marginBottom: 10, padding: 8, borderRadius: 4 },
 });
