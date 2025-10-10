@@ -87,7 +87,7 @@ export default function GenreScreen() {
   );
 
   return (
-    <View>
+    <View style={styles.container}>
       {renderHeader()}
       <FlatList
         data={filteredMovies}
@@ -120,6 +120,9 @@ export default function GenreScreen() {
 const styles = StyleSheet.create({
   // laita taustaväriksi
   // backgroundColor: "#E2E2E2",
+  container: {
+    backgroundColor: "#E2E2E2",
+  },
   heading: { fontSize: 22, marginBottom: 16, fontWeight: "bold", alignSelf: "center", marginTop: 5 },
   subHeading: {
     fontSize: 18,

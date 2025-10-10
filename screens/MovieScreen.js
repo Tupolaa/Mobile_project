@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,16 @@ import {
   Dimensions,
   Modal,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import StyledButton from "../components/StyledButton";
 import FormScreen from "./FormScreen";
+import { AuthContext } from "../context/AuthContext";
+
 
 export default function MovieScreen() {
+  const { user } = useContext(AuthContext);
   const route = useRoute();
   const { movie } = route.params;
   const navigation = useNavigation();
@@ -49,6 +53,26 @@ const closeModal = () => {
     useNativeDriver: true,
   }).start(() => setFormVisible(false));
 };
+
+const showAlert = () =>
+  Alert.alert(
+    'Log in error',
+    'You need to be logged in to write a review.',
+    [
+      {
+        text: 'Log in',
+        onPress: () => navigation.navigate('Profile'),
+        style: 'default',
+      },
+    ],
+    
+  );const handlePress = () => {
+    if (user) {
+      openModal();
+    } else {
+      showAlert();
+    }
+  };
 console.log(movieId);
   console.log(title);
   return (
@@ -71,7 +95,7 @@ console.log(movieId);
           navigation.navigate("Review", { movieId: movie._id, title: movie.title })
         }
       />
-      <StyledButton title="Add Review" onPress={openModal} />
+      <StyledButton title="Add Review" onPress={handlePress} />
 
       {/* MODAL */}
       <Modal transparent visible={formVisible} animationType="none">
@@ -101,6 +125,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     alignItems: "center",
+    backgroundColor: "#E2E2E2",
   },
   poster: {
     width: 300,

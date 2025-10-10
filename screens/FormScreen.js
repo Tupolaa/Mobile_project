@@ -13,7 +13,7 @@ import {
   ScrollView,
   
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { createReview } from "../services/backendAPI";
@@ -26,7 +26,7 @@ export default function FormScreen({ movieId, title, onClose }) {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
+  
 
   const route = useRoute();
 
@@ -60,27 +60,9 @@ export default function FormScreen({ movieId, title, onClose }) {
       setLoading(false);
     }
   };
-  const showAlert = () =>
-  Alert.alert(
-    'Log in error',
-    'You need to be logged in to write a review.',
-    [
-      {
-        text: 'Log in',
-        onPress: () => navigation.navigate('Profile'),
-        style: 'default',
-      },
-    ],
-    
-  );
+  
 
-  const handlePress = () => {
-    if (user) {
-      handleSubmit();
-    } else {
-      showAlert();
-    }
-  };
+  
 
   return (
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
@@ -136,7 +118,7 @@ export default function FormScreen({ movieId, title, onClose }) {
               <View style={styles.formGroup}>
                 <Button
                   title={loading ? "Submitting..." : "Submit Review"}
-                  onPress={handlePress}
+                  onPress={handleSubmit}
                   color="#2D64AC"
                   disabled={loading}
                 />
