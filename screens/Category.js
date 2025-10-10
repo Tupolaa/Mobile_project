@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, Button, StyleSheet, FlatList, Image, Modal, TextInput } from "react-native";
 import { LogBox } from "react-native";
 import { fetchMovies, fetchGenres } from "../services/backendAPI";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+
+
 
 LogBox.ignoreLogs(["React keys must be passed directly to JSX"]);
 
@@ -12,6 +14,7 @@ export default function GenreScreen() {
   const [allMovies, setAllMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [formVisible, setFormVisible] = useState(false);
   const [search, setSearch] = useState("");
   const navigation = useNavigation();
 
@@ -43,7 +46,14 @@ export default function GenreScreen() {
   const handlePress = (name) => {
     setSelectedGenre(name);
     setSearch("");
+    closeModal();
   };
+  const openModal = () => {
+    setFormVisible(true);
+  };
+  const closeModal = () => {
+    setFormVisible(false);
+  }
 
   const renderHeader = () => (
     <View>
@@ -58,7 +68,16 @@ export default function GenreScreen() {
           returnKeyType="search"
         />
       </View>
-      <Text style={styles.heading}>Choose a Genre</Text>
+      <Text style={styles.heading} onPress={openModal}>Choose a Genre</Text>
+      <Modal transparent visible={formVisible} animationType="none">
+  {/* Backdrop */}
+  <TouchableOpacity
+    activeOpacity={1}
+    style={styles.modalView}
+    onPress={closeModal} // Close modal when clicking outside
+  >
+    {/* Modal Content */}
+    <View style={styles.modalContainer}>
       <View style={styles.buttonWrap}>
         <TouchableOpacity
           style={[styles.button, selectedGenre === null && styles.activeButton]}
@@ -66,6 +85,7 @@ export default function GenreScreen() {
             setSelectedGenre(null);
             setSearch("");
             setFilteredMovies(allMovies);
+            closeModal();
           }}
         >
           <Text style={styles.buttonText}>All</Text>
@@ -81,9 +101,13 @@ export default function GenreScreen() {
           </TouchableOpacity>
         ))}
       </View>
+    </View>
+  </TouchableOpacity>
+</Modal>
 
       <Text style={styles.subHeading}>{selectedGenre ? `${selectedGenre} Movies` : "All Movies"}</Text>
     </View>
+ 
   );
 
   return (
@@ -136,6 +160,25 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     marginBottom: 10,
+  },
+  modalView: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center", // Center modal vertically
+  alignItems: "center",
+
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 8,
+    alignSelf: "center",
   },
   noMovies: {
     textAlign: "center",
