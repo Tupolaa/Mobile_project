@@ -9,10 +9,55 @@ import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
+// AuthProvider
+// Wrap your app with <AuthProvider> to access authentication state and actions
+// via `useContext(AuthContext)`.
+//
+// Value provided: { token, user, login, logout, loading }
+// - token: string | null — the JWT token used for authenticated API calls
+// - user: object | null — decoded user info extracted from the token (id, role, username)
+// - login(token): async — saves token, decodes user info and schedules auto-logout
+// - logout(): async — clears token, user and any logout timers
+// - loading: boolean — true while initial token check is in progress
+
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Authentication state
+  const [token, setToken] = useState(null); // stored JWT
+  const [user, setUser] = useState(null); // decoded user info from token
+  const [loading, setLoading] = useState(true); // initial loading state while checking AsyncStorage
+
+  // On mount: attempt to restore token from AsyncStorage. If a token exists and
+  // is valid (not expired), populate `token` and `user` and schedule automatic logout
+  // when the token expires. Otherwise clear any stored token and mark loading false.
+
+  // Runs when the app starts
+  useEffect(() => {
+    (async () => {
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        const isValid = await checkToken(storedToken);
+        if (isValid) {
+          setToken(storedToken);
+          const decoded = jwtDecode(storedToken);
+          setUser({
+            id: decoded.id,
+            role: decoded.role,
+            username: decoded.username,
+          });
+          setupAutoLogout(decoded); // Setup auto logout based on token expiry
+        } else {
+          // Remove invalid/expired token from storage
+          await AsyncStorage.removeItem("token");
+          setToken(null);
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    })();
+
+    // Cleanup timer when component unmounts
+    return () => clearLogoutTimeout();
+  }, []);
 
   // useRef is used to store the logout timeout ID between renders
   const logoutTimeoutRef = useRef(null);
@@ -41,35 +86,6 @@ export function AuthProvider({ children }) {
       logout();
     }
   };
-
-  // Runs when the app starts
-  useEffect(() => {
-    (async () => {
-      const storedToken = await AsyncStorage.getItem("token");
-      if (storedToken) {
-        const isValid = await checkToken(storedToken);
-        if (isValid) {
-          setToken(storedToken); 
-          const decoded = jwtDecode(storedToken);
-          setUser({
-            id: decoded.id,
-            role: decoded.role,
-            username: decoded.username,
-          });
-          setupAutoLogout(decoded); // Setup auto logout based on token expiry
-        } else {
-          // Remove invalid/expired token from storage
-          await AsyncStorage.removeItem("token");
-          setToken(null);
-          setUser(null);
-        }
-      }
-      setLoading(false);
-    })();
-
-    // Cleanup timer when component unmounts
-    return () => clearLogoutTimeout();
-  }, []);
 
   // Checks if token is valid and not expired
   const checkToken = async (storedToken) => {

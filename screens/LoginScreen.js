@@ -1,4 +1,12 @@
-import React, { use, useState, useContext } from "react";
+// screens/LoginScreen.js
+// Simple login screen used to authenticate a user.
+//
+// Behaviour:
+// - Collects username and password
+// - Calls `loginRequest` to authenticate against the backend
+// - On success calls `login(token)` from `AuthContext` to persist token and schedule auto-logout
+// - Navigates to 'Profile' screen on successful login
+import React, { useState, useContext } from "react";
 import { View, TextInput, Button, Text, StyleSheet, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
@@ -16,7 +24,11 @@ export default function LoginScreen({ navigation }) {
     setMessage("");
     try {
       const data = await loginRequest(username, password);
+      // Pass the received token to the AuthContext `login` function which
+      // will store it in AsyncStorage and decode user info.
       await login(data.token);
+
+      // Replace current route with Profile so the user cannot go back to login
       navigation.replace("Profile");
     } catch (err) {
       setMessage(err.message);

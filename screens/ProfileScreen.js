@@ -10,6 +10,14 @@ import { fetchGenres } from "../services/backendAPI";
 import { getUserGenres, saveUserGenre, removeUserGenre } from "../storage/genrePreferences";
 import GenrePreferencesModal from "../components/GenrePreferencesModal";
 
+// ProfileScreen
+// Displays the logged-in user's profile including their reviews and genre preferences.
+//
+// Responsibilities:
+// - If not authenticated, show navigation buttons to Login/Register
+// - If authenticated, fetch and render the user's reviews
+// - Provide actions to edit/delete reviews and to manage preferred genres
+
 export default function ProfileScreen({ navigation }) {
   const { user, token, logout } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
@@ -20,6 +28,7 @@ export default function ProfileScreen({ navigation }) {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [genresModalVisible, setGenresModalVisible] = useState(false);
 
+  // When a user is present (logged in), fetch their reviews and load genres & preferences
   useEffect(() => {
     if (user) {
       fetchReviews();
@@ -27,12 +36,14 @@ export default function ProfileScreen({ navigation }) {
     }
   }, [user]);
 
-  // Loads genres and user preferences from SQLite database locally
+  // Loads genres from backend and then loads the user's stored genre preferences locally
   const loadGenresAndPreferences = async () => {
     try {
       const fetched = await fetchGenres();
       setGenres(fetched);
 
+      // getUserGenres reads the user's saved preferences (SQLite/local storage) and
+      // calls setSelectedGenres with the result — this keeps the UI in sync with saved choices.
       if (user?.id) {
         getUserGenres(user.id, setSelectedGenres);
       }
@@ -47,6 +58,7 @@ export default function ProfileScreen({ navigation }) {
     setRefreshing(false);
   };
 
+  // Fetches reviews for the current user from backendAPI
   const fetchReviews = async () => {
     try {
       const res = await getAllReviewsByUser(token, user.id);
@@ -56,6 +68,7 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  // Deletes a review both on the backend and locally from state
   const handleDeleteReview = async (reviewId) => {
     try {
       await deleteReviewById(token, reviewId);
@@ -66,12 +79,14 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  // Open the edit modal for a selected review
   const handleEditReview = (review) => {
     setSelectedReview(review);
     console.log("Editing review:", review._id);
     setIsModalVisible(true);
   };
 
+  // Called by EditReviewModal after a successful update — merge the updated review into state
   const handleUpdateReview = (updatedReview) => {
     setReviews((prev) => prev.map((r) => (r._id === updatedReview._id ? updatedReview : r)));
   };
