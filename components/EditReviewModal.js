@@ -80,7 +80,7 @@ export default function EditReviewModal({
           </Text>
 
           {/* Rating slider - use integer steps between 1 and 5 */}
-          <Text style={styles.label}>Your Rating: {rating}</Text>
+          <Text style={styles.label}>Your Rating ⭐: {rating} </Text>
           <Slider
             style={{ width: "100%", height: 40 }}
             minimumValue={1}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#555",
     marginBottom: 6,
   },
