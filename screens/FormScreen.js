@@ -11,31 +11,34 @@ import {
   Keyboard,
   Platform,
   ScrollView,
-  
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { createReview } from "../services/backendAPI";
 import { AuthContext } from "../context/AuthContext";
 import { useRoute } from "@react-navigation/native";
 
-
 export default function FormScreen({ movieId, title, onClose }) {
+  // Get auth token and user from context
   const { token, user } = useContext(AuthContext);
-  const [rating, setRating] = useState("");
-  const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
 
+  const [rating, setRating] = useState("");   // 1–5 (string from Picker)
+  const [comment, setComment] = useState(""); // review text
+  const [loading, setLoading] = useState(false); // submit button loading
+
+  
   const route = useRoute();
 
+  // Submit review to backend
   const handleSubmit = async () => {
+  
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
       return;
     }
 
+  
     const reviewData = {
       user: user.id,
       movie: movieId,
@@ -48,11 +51,16 @@ export default function FormScreen({ movieId, title, onClose }) {
 
     setLoading(true);
     try {
+      // Call API to create review
       const newReview = await createReview(token, reviewData);
       console.log("Review created:", newReview);
       Alert.alert("Success", "Your review has been submitted!");
+
+     
       setRating("");
       setComment("");
+
+     
     } catch (err) {
       console.error("Error creating review:", err);
       Alert.alert("Error", "Failed to submit review. Please try again.");
@@ -60,33 +68,14 @@ export default function FormScreen({ movieId, title, onClose }) {
       setLoading(false);
     }
   };
-  const showAlert = () =>
-  Alert.alert(
-    'Log in error',
-    'You need to be logged in to write a review.',
-    [
-      {
-        text: 'Log in',
-        onPress: () => navigation.navigate('Profile'),
-        style: 'default',
-      },
-    ],
-    
-  );
-
-  const handlePress = () => {
-    if (user) {
-      handleSubmit();
-    } else {
-      showAlert();
-    }
-  };
 
   return (
+    
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
+      {/* Move content up when keyboard opens */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"} // 👈 Pushes whole view up
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -95,11 +84,13 @@ export default function FormScreen({ movieId, title, onClose }) {
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentContainer}>
+              {/* Header / movie title */}
               <Text style={styles.title}>
                 Write a review for{"\n"}
                 {title}
               </Text>
 
+              {/* Rating field */}
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Rating (1–5):</Text>
                 <View style={styles.pickerContainer}>
@@ -107,6 +98,7 @@ export default function FormScreen({ movieId, title, onClose }) {
                 </View>
               </View>
 
+              {/* Comment textarea */}
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Comment:</Text>
                 <TextInput
@@ -117,21 +109,19 @@ export default function FormScreen({ movieId, title, onClose }) {
                   value={comment}
                   onChangeText={setComment}
                   textAlignVertical="top"
-                  disableFullscreenUI={true} // 👈 prevents Android “separate writing view”
+                  disableFullscreenUI={true} 
                 />
               </View>
 
+              {/* Submit button */}
               <View style={styles.formGroup}>
                 <Button
                   title={loading ? "Submitting..." : "Submit Review"}
-                  onPress={handlePress}
+                  onPress={handleSubmit}
                   color="#2D64AC"
                   disabled={loading}
                 />
-                
               </View>
-
-             
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
@@ -141,15 +131,18 @@ export default function FormScreen({ movieId, title, onClose }) {
 }
 
 const styles = StyleSheet.create({
+  // Root safe-area wrapper
   safearea: {
     flex: 1,
     backgroundColor: "transparent",
   },
+  // ScrollView content layout
   scrollContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",
     backgroundColor: "#E2E2E2",
   },
+  // Centered inner content
   contentContainer: {
     flex: 1,
     alignSelf: "center",
@@ -158,6 +151,7 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     paddingTop: 20,
   },
+  // Screen title
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -165,15 +159,18 @@ const styles = StyleSheet.create({
     color: "#2D64AC",
     textAlign: "center",
   },
+  // Spacing for each form field
   formGroup: {
     marginBottom: 20,
   },
+  // Field label
   label: {
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "600",
     color: "#424242",
   },
+  // Picker styling & border
   pickerContainer: {
     borderWidth: 1,
     borderColor: "#424242",
@@ -181,10 +178,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#fff",
   },
+  // Picker size
   picker: {
     height: 60,
     width: "100%",
   },
+  // Comment input styles
   textarea: {
     borderWidth: 1,
     borderColor: "#424242",
