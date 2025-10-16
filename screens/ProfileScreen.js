@@ -10,6 +10,14 @@ import { fetchGenres } from "../services/backendAPI";
 import { getUserGenres, saveUserGenre, removeUserGenre } from "../storage/genrePreferences";
 import GenrePreferencesModal from "../components/GenrePreferencesModal";
 
+// ProfileScreen
+// Displays the logged-in user's profile including their reviews and genre preferences.
+//
+// Responsibilities:
+// - If not authenticated, show navigation buttons to Login/Register
+// - If authenticated, fetch and render the user's reviews
+// - Provide actions to edit/delete reviews and to manage preferred genres
+
 export default function ProfileScreen({ navigation }) {
   const { user, token, logout } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
@@ -20,6 +28,7 @@ export default function ProfileScreen({ navigation }) {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [genresModalVisible, setGenresModalVisible] = useState(false);
 
+  // When a user is present (logged in), fetch their reviews and load genres & preferences
   useEffect(() => {
     if (user) {
       fetchReviews();
@@ -27,12 +36,14 @@ export default function ProfileScreen({ navigation }) {
     }
   }, [user]);
 
-  // Loads genres and user preferences from SQLite database locally
+  // Loads genres from backend and then loads the user's stored genre preferences locally
   const loadGenresAndPreferences = async () => {
     try {
       const fetched = await fetchGenres();
       setGenres(fetched);
 
+      // getUserGenres reads the user's saved preferences (SQLite/local storage) and
+      // calls setSelectedGenres with the result — this keeps the UI in sync with saved choices.
       if (user?.id) {
         getUserGenres(user.id, setSelectedGenres);
       }
@@ -47,6 +58,7 @@ export default function ProfileScreen({ navigation }) {
     setRefreshing(false);
   };
 
+  // Fetches reviews for the current user from backendAPI
   const fetchReviews = async () => {
     try {
       const res = await getAllReviewsByUser(token, user.id);
@@ -56,6 +68,7 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  // Deletes a review both on the backend and locally from state
   const handleDeleteReview = async (reviewId) => {
     try {
       await deleteReviewById(token, reviewId);
@@ -66,32 +79,83 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  // Open the edit modal for a selected review
   const handleEditReview = (review) => {
     setSelectedReview(review);
     console.log("Editing review:", review._id);
     setIsModalVisible(true);
   };
 
+  // Called by EditReviewModal after a successful update — merge the updated review into state
   const handleUpdateReview = (updatedReview) => {
     setReviews((prev) => prev.map((r) => (r._id === updatedReview._id ? updatedReview : r)));
   };
+
+  // Simple initials for avatar (first letters of up to two name parts)
+  // for example "John Doe" -> "JD", "Alice" -> "A"
+  const initials = (user?.username || "")
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <View style={styles.container}>
       {!user ? (
         <>
-          <Text style={styles.text}>You are not logged in.</Text>
-          <StyledButton title="Go to Login" onPress={() => navigation.navigate("Login")} style={styles.button} />
-          <StyledButton title="Go to Register" onPress={() => navigation.navigate("Register")} style={styles.button} />
+          {/* Improved not-logged-in UI: centered card with subtitle and two buttons */}
+          <View style={styles.notLoggedContainer}>
+            <View style={styles.notLoggedBox}>
+              <Text style={styles.notLoggedTitle}>You are not logged in</Text>
+              <Text style={styles.notLoggedSubtitle}>
+                Sign in to view and manage your reviews and preferred genres.
+              </Text>
+
+              <View style={styles.notLoggedButtonsRow}>
+                <StyledButton
+                  title="Login"
+                  onPress={() => navigation.navigate("Login")}
+                  style={[styles.smallButton]}
+                />
+                <StyledButton
+                  title="Register"
+                  onPress={() => navigation.navigate("Register")}
+                  style={[styles.smallButton, styles.secondaryButton]}
+                />
+              </View>
+            </View>
+          </View>
         </>
       ) : (
         <>
-          <Text style={styles.text}>Welcome, {user.username}!</Text>
-          <StyledButton
-            title="Select Preferred Genres"
-            onPress={() => setGenresModalVisible(true)}
-            style={styles.button}
-          />
+          {/* Profile header with avatar and meta info */}
+          <View style={styles.profileHeader}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{initials}</Text>
+            </View>
+            <View style={styles.userInfo}>
+              <Text style={styles.username}>{user.username}</Text>
+              <Text style={styles.meta}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</Text>
+            </View>
+          </View>
+
+          {/* Action row: compact buttons for common actions */}
+          <View style={styles.actionRow}>
+            <StyledButton
+              title="Preferred Genres"
+              onPress={() => setGenresModalVisible(true)}
+              style={[styles.actionButton]}
+              textStyle={styles.actionButtonText}
+            />
+            <StyledButton
+              title="Logout"
+              onPress={logout}
+              style={[styles.actionButton, styles.logoutButton]}
+              textStyle={styles.actionButtonText}
+            />
+          </View>
           <FlatList
             style={{ flex: 1, width: "100%" }}
             contentContainerStyle={[reviews.length === 0 && styles.center, { flexGrow: 1 }]}
@@ -119,7 +183,6 @@ export default function ProfileScreen({ navigation }) {
             selectedGenres={selectedGenres}
             setSelectedGenres={setSelectedGenres}
           />
-          <StyledButton title="Logout" onPress={logout} style={styles.button} />
         </>
       )}
     </View>
@@ -131,4 +194,42 @@ const styles = StyleSheet.create({
   text: { fontSize: 18, marginBottom: 20 },
   button: { width: 200, alignSelf: "center" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  // Not-logged-in card styles
+  notLoggedContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  notLoggedBox: {
+    width: "90%",
+    backgroundColor: "#fff",
+    padding: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  notLoggedTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 8, color: "#333" },
+  notLoggedSubtitle: { fontSize: 14, color: "#464646ff", textAlign: "center", marginBottom: 16 },
+  notLoggedButtonsRow: { flexDirection: "row", justifyContent: "space-between", width: "100%" },
+  smallButton: { flex: 1, marginHorizontal: 6 },
+  secondaryButton: { backgroundColor: "#808080ff" },
+  // Logged-in profile styles
+  profileHeader: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  avatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#1b2a83ff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  avatarText: { color: "#fff", fontWeight: "700", fontSize: 20 },
+  userInfo: { flex: 1 },
+  username: { fontSize: 18, fontWeight: "700", color: "#333" },
+  meta: { color: "#666" },
+  actionRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 12 },
+  actionButton: { flex: 1, marginHorizontal: 6, paddingVertical: 10 },
+  actionButtonText: { fontSize: 14 },
+  logoutButton: { backgroundColor: "#c62828" },
 });

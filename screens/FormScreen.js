@@ -94,19 +94,7 @@ export default function FormScreen({ movieId, title, onClose }) {
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Rating (1–5):</Text>
                 <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={rating}
-                    onValueChange={(itemValue) => setRating(itemValue)}
-                    style={styles.picker}
-                    prompt="Select rating"
-                  >
-                    <Picker.Item label="Select rating" value="" />
-                    <Picker.Item label="⭐" value="1" />
-                    <Picker.Item label="⭐⭐" value="2" />
-                    <Picker.Item label="⭐⭐⭐" value="3" />
-                    <Picker.Item label="⭐⭐⭐⭐" value="4" />
-                    <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
-                  </Picker>
+                  
                 </View>
               </View>
 
