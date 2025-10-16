@@ -4,18 +4,18 @@ A React Native mobile application designed to provide a seamless user experience
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🎥 Browse movies by genre
-- 📝 Write reviews for movies
-- ⭐ View ratings and comments from other users
-- 🔍 Search movies by title
-- 🎯 Get personalized movie recommendations based on genres
-- 🧾 User authentication for personalized features
+-  Browse movies by genre
+-  Write reviews for movies
+-  View ratings and comments from other users
+-  Search movies by title
+-  Get personalized movie recommendations based on genres
+-  User authentication for personalized features
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Tool / Library                          | Description                                      |
 |-----------------------------------------|--------------------------------------------------|
@@ -33,26 +33,26 @@ A React Native mobile application designed to provide a seamless user experience
 
 ---
 
-## 🖼️ Supported Platforms
+## Supported Platforms
 
 - Android
 - iOS
 
 ---
 
-## 👤 Creators
+## Creators
 
 - [Teemu Tupola](https://github.com/Tupolaa)
 - [Joni Mitronen](https://github.com/jonesssy)
 - [Niko laaksonen](https://github.com/NikoLaaks)
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License. Feel free to use, modify, and distribute.
 
 ---
 
-## 🙋 Contact
+## Contact
 
 Developed by students in the Mobile Project program.  
 For feedback, improvements, or collaborations, please reach out via GitHub.
@@ -66,7 +66,6 @@ For feedback, improvements, or collaborations, please reach out via GitHub.
 - `/components` – Reusable UI components.
 - `/assets` – Static assets like images and icons.
 - `/utils` – Utility functions for the app.
-
 
 
 # Meeting Notes
