@@ -32,6 +32,13 @@ A React Native mobile application designed to provide a seamless user experience
 | [React Native Dotenv](https://github.com/goatandsheep/react-native-dotenv) | Manage environment variables                    |
 
 ---
+## Backend Project
+
+The backend project used to provide APIs and original data for this application can be found here:
+
+- **Backend Repository**: [Backend-Web-Development](https://github.com/joni23008/Backend-Web-Development)
+It was made by us in early 2025
+---
 
 ## Supported Platforms
 
