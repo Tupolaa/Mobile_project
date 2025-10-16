@@ -19,19 +19,18 @@ import { AuthContext } from "../context/AuthContext";
 
 
 export default function MovieScreen() {
+  // State variables
   const { user } = useContext(AuthContext);
   const route = useRoute();
   const { movie } = route.params;
   const navigation = useNavigation();
-
   const [formVisible, setFormVisible] = useState(false);
   const movieId = movie._id;
   const title = movie.title;
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.posters[0]}`;
   const { height } = Dimensions.get("window");
-
   const modalHeight = height * 0.5;
-const slideAnim = useRef(new Animated.Value(modalHeight)).current;
+  const slideAnim = useRef(new Animated.Value(modalHeight)).current;
 
 const openModal = () => {
   setFormVisible(true);
