@@ -36,7 +36,7 @@ A React Native mobile application designed to provide a seamless user experience
 
 The backend project used to provide APIs and original data for this application can be found here:
 
-- **Backend Repository**: [Mobile Project Backend](https://github.com/joni23008/Backend-Web-Development)
+- **Backend Repository**: [Backend-Web-Development](https://github.com/joni23008/Backend-Web-Development)
 It was made by us in early 2025
 ---
 
