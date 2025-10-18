@@ -1,3 +1,18 @@
+/**
+ * App.js
+ * 
+ * Main entry point for the mobile app.
+ * 
+ * Structure overview:
+ * - GestureHandlerRootView: enables gesture handling across the app.
+ * - SafeAreaProvider: keeps content within safe display areas (avoids notches, etc.).
+ * - AuthProvider: wraps the app to provide authentication context.
+ * - NavigationContainer: handles screen navigation using React Navigation.
+ * - Stack.Navigator: defines app screens and navigation flow.
+ * - Logo: displays the app name/logo at the top.
+ * - Navbar: persistent bottom navigation bar.
+ */
+
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,6 +34,7 @@ import TestScreen from "./screens/TestScreen";
 import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 
+// Create navigation stack
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -30,10 +46,10 @@ export default function App() {
             <StatusBar style="dark" />
 
             <View style={styles.container}>
-              {/* Logo */}
+              {/* Insert app name here */}
               <Logo name="CRITIQ" />
               <View style={styles.stackContainer}>
-                {/* Vaihda tähän initalRouteName mist haluut alottaa */}
+                {/* initalRouteName = where the app starts off */}
                 <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen name="Category" component={Category} />
@@ -62,6 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   stackContainer: {
-    flex: 1, // Stack takes all space above the navbar
+    flex: 1,
   },
 });

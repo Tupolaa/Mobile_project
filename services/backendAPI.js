@@ -1,6 +1,13 @@
 import { BACKEND_URL } from "@env";
 
-// GET - all reviews
+/**
+ * GET - read all reviews from the backend.
+ * 
+ * @async
+ * @function getAllReviews
+ * @returns {Promise<Array>} A list of all review objects.
+ * @throws {Error} If the request fails or the response is invalid.
+ */
 export const getAllReviews = async () => {
   try {
     console.log("[getAllReviews] 🔧 Fetching...");
@@ -17,7 +24,15 @@ export const getAllReviews = async () => {
   }
 };
 
-// GET - all reviews by movie ID
+/**
+ * GET - read all reviews by movie ID.
+ * 
+ * @async
+ * @function getAllReviewsByMovie
+ * @param {string} id - The MongoDB movie ID.
+ * @returns {Promise<Array>} A list of reviews for the given movie.
+ * @throws {Error} If no ID is provided or the request fails.
+ */
 export const getAllReviewsByMovie = async (id) => {
   if (!id) throw new Error("No id provided!");
   try {
@@ -35,7 +50,17 @@ export const getAllReviewsByMovie = async (id) => {
   }
 };
 
-// GET - all reviews by user ID
+
+/**
+ * GET - read all reviews by user ID.
+ * 
+ * @async
+ * @function getAllReviewsByUser
+ * @param {string} token - The user's authentication token.
+ * @param {string} id - The MongoDB user ID.
+ * @returns {Promise<Array>} A list of the user's reviews.
+ * @throws {Error} If the token or ID is missing, or the request fails.
+ */
 export const getAllReviewsByUser = async (token, id) => {
   if (!token) throw new Error("No token provided!");
   if (!id) throw new Error("No id provided!");
@@ -57,7 +82,21 @@ export const getAllReviewsByUser = async (token, id) => {
   }
 };
 
-// POST - create a new review
+
+/**
+ * POST - create a new review for movie.
+ * 
+ * @async
+ * @function createReview
+ * @param {string} token - The user's authentication token.
+ * @param {Object} reviewData - The review details.
+ * @param {string} reviewData.user - The user ID.
+ * @param {string} reviewData.movie - The movie ID.
+ * @param {number} reviewData.rating - The user's rating for the movie.
+ * @param {string} [reviewData.comment] - Optional text comment.
+ * @returns {Promise<Object>} The newly created review object.
+ * @throws {Error} If required data is missing or the request fails.
+ */
 export const createReview = async (token, reviewData) => {
   if (!token) throw new Error("No token provided!");
   console.log(reviewData.rating);
@@ -92,7 +131,16 @@ export const createReview = async (token, reviewData) => {
   }
 };
 
-// DELETE - remove a review by ID
+/**
+ * DELETE - removes a review by it's ID.
+ * 
+ * @async
+ * @function deleteReviewById
+ * @param {string} token - The user's authentication token.
+ * @param {string} id - The MongoDB review ID.
+ * @returns {Promise<Object>} The deleted review object.
+ * @throws {Error} If the token or ID is missing, or the request fails.
+ */
 export const deleteReviewById = async (token, id) => {
   if (!token) throw new Error("No token provided!");
   if (!id) throw new Error("No review ID provided!");
@@ -117,32 +165,20 @@ export const deleteReviewById = async (token, id) => {
     throw err;
   }
 };
- // Fetching genres
- export const fetchGenres = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/genres`);
-      const data = await res.json();
 
-      return data; // Return the fetched genres
-    } catch (err) {
-      console.error("Fetch genres error:", err);
-      throw err;
-    }
-  };
-// Fetching movies
-export const fetchMovies = async () => {
-  try {
-    const res = await fetch(`${BACKEND_URL}/movies`);
-    const data = await res.json();
-
-    return data; // Return the fetched movies
-  } catch (err) {
-    console.error("Fetch movies error:", err);
-    throw err;
-  }
-};
-
-// PATCH - update a review by ID
+/**
+ * PATCH - Updates an existing review by ID.
+ * 
+ * @async
+ * @function updateReviewById
+ * @param {string} token - The user's authentication token.
+ * @param {string} id - The MongoDB review ID.
+ * @param {Object} reviewData - The updated review details.
+ * @param {number} [reviewData.rating] - Updated rating value.
+ * @param {string} [reviewData.comment] - Updated comment text.
+ * @returns {Promise<Object>} The updated review object.
+ * @throws {Error} If required parameters are missing or the request fails.
+ */
 export const updateReviewById = async (token, id, reviewData) => {
   if (!token) throw new Error("No token provided!");
   if (!id) throw new Error("No review ID provided!");
@@ -171,7 +207,15 @@ export const updateReviewById = async (token, id, reviewData) => {
   }
 };
 
-// GET - 10 random recommendations
+
+/**
+ * GET - Fetches 10 random recommended movies.
+ * 
+ * @async
+ * @function getRandomRecommendations
+ * @returns {Promise<Array>} A list of recommended movie objects.
+ * @throws {Error} If the request fails.
+ */
 export const getRandomRecommendations = async () => {
   try {
     console.log("[getRandomRecommendations] 🔧 Fetching...");
@@ -189,7 +233,21 @@ export const getRandomRecommendations = async () => {
 };
 
 // testing: http://localhost:5000/recommended/user/?genreIds=27
-//  GET - personalized recommendations by prefered genre IDs and sorted by avg rating from best to worst
+/**
+ * GET - Fetches personalized movie recommendations for a user, 
+ * optionally filtered by genre IDs, and is sorted by avg rating from best to worst.
+ * 
+ * @async
+ * @function getPersonalizedRecommendations
+ * @param {string} token - The user's authentication token.
+ * @param {Array<number>} [genreIds=[]] - Optional array of genre IDs from the local database.
+ * @returns {Promise<Array>} A list of recommended movie objects.
+ * @throws {Error} If the token is missing or the request fails.
+ * 
+ * @example
+ * const genreIds = await getUserGenres(user.id);
+ * const recommendations = await getPersonalizedRecommendations(token, genreIds);
+ */
 export const getPersonalizedRecommendations = async (token, genreIds = []) => {
   if (!token) throw new Error("No token provided!");
 
@@ -214,6 +272,46 @@ export const getPersonalizedRecommendations = async (token, genreIds = []) => {
     return json.data;
   } catch (err) {
     console.error("[getPersonalizedRecommendations] ❌ Error:", err);
+    throw err;
+  }
+};
+
+/**
+ * Fetches all movie genres from the backend.
+ * 
+ * @async
+ * @function fetchGenres
+ * @returns {Promise<Array>} A list of genre objects.
+ * @throws {Error} If the request fails.
+ */
+export const fetchGenres = async () => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/genres`);
+    const data = await res.json();
+
+    return data; // Return the fetched genres
+  } catch (err) {
+    console.error("Fetch genres error:", err);
+    throw err;
+  }
+};
+
+/**
+ * Fetches all movies from the backend.
+ * 
+ * @async
+ * @function fetchMovies
+ * @returns {Promise<Array>} A list of movie objects.
+ * @throws {Error} If the request fails.
+ */
+export const fetchMovies = async () => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/movies`);
+    const data = await res.json();
+
+    return data; // Return the fetched movies
+  } catch (err) {
+    console.error("Fetch movies error:", err);
     throw err;
   }
 };
