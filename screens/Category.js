@@ -214,14 +214,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
   },
-  // Modal background overlay
+  
   modalView: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
-  // Modal content box
+  
   modalContainer: {
     width: "80%",
     backgroundColor: "#fff",
