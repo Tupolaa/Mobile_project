@@ -84,7 +84,7 @@ export default function FormScreen({ movieId, title, onClose }) {
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentContainer}>
-              {/* Header / movie title */}
+              {/* movie title */}
               <Text style={styles.title}>
                 Write a review for{"\n"}
                 {title}
@@ -129,20 +129,17 @@ export default function FormScreen({ movieId, title, onClose }) {
     </SafeAreaView>
   );
 }
-
+// -------------------- STYLES --------------------
 const styles = StyleSheet.create({
-  // Root safe-area wrapper
   safearea: {
     flex: 1,
     backgroundColor: "transparent",
   },
-  // ScrollView content layout
   scrollContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",
     backgroundColor: "#E2E2E2",
   },
-  // Centered inner content
   contentContainer: {
     flex: 1,
     alignSelf: "center",
@@ -151,7 +148,6 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     paddingTop: 20,
   },
-  // Screen title
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -159,18 +155,15 @@ const styles = StyleSheet.create({
     color: "#2D64AC",
     textAlign: "center",
   },
-  // Spacing for each form field
   formGroup: {
     marginBottom: 20,
   },
-  // Field label
   label: {
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "600",
     color: "#424242",
   },
-  // Picker styling & border
   pickerContainer: {
     borderWidth: 1,
     borderColor: "#424242",
@@ -178,12 +171,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#fff",
   },
-  // Picker size
   picker: {
     height: 60,
     width: "100%",
   },
-  // Comment input styles
   textarea: {
     borderWidth: 1,
     borderColor: "#424242",

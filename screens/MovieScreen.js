@@ -17,63 +17,70 @@ import StyledButton from "../components/StyledButton";
 import FormScreen from "./FormScreen";
 import { AuthContext } from "../context/AuthContext";
 
-
+// MovieScreen component displays detailed information about a movie and allows users to add reviews.
 export default function MovieScreen() {
-  // State variables
   const { user } = useContext(AuthContext);
   const route = useRoute();
   const { movie } = route.params;
   const navigation = useNavigation();
   const [formVisible, setFormVisible] = useState(false);
+
+  // Extract movie details
   const movieId = movie._id;
   const title = movie.title;
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.posters[0]}`;
+  // Get screen dimensions for modal positioning
   const { height } = Dimensions.get("window");
   const modalHeight = height * 0.5;
   const slideAnim = useRef(new Animated.Value(modalHeight)).current;
 
-const openModal = () => {
-  setFormVisible(true);
-  // Start hidden (translateY = modalHeight)
-  slideAnim.setValue(modalHeight);
-  Animated.timing(slideAnim, {
-    toValue: 0, // slide up to position
-    duration: 300,
-    easing: Easing.out(Easing.ease),
-    useNativeDriver: true,
-  }).start();
-};
 
-const closeModal = () => {
-  Animated.timing(slideAnim, {
-    toValue: modalHeight, // slide back down
-    duration: 250,
-    easing: Easing.in(Easing.ease),
-    useNativeDriver: true,
-  }).start(() => setFormVisible(false));
+  // Function to open the modal with animation
+  const openModal = () => {
+    setFormVisible(true);
+    slideAnim.setValue(modalHeight);
+    Animated.timing(slideAnim, {
+      toValue: 0, 
+      duration: 300,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
 };
-
-const showAlert = () =>
-  Alert.alert(
-    'Log in error',
-    'You need to be logged in to write a review.',
-    [
-      {
-        text: 'Log in',
-        onPress: () => navigation.navigate('Profile'),
-        style: 'default',
-      },
-    ],
-    
-  );const handlePress = () => {
-    if (user) {
-      openModal();
-    } else {
-      showAlert();
-    }
+  // Function to close the modal with animation
+  const closeModal = () => {
+    Animated.timing(slideAnim, {
+      toValue: modalHeight, 
+      duration: 250,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => setFormVisible(false));
   };
-console.log(movieId);
-  console.log(title);
+  // Function to show an alert if the user is not logged in
+  const showAlert = () =>
+    Alert.alert(
+      'Log in error',
+      'You need to be logged in to write a review.',
+      [
+        {
+          text: 'Log in',
+          onPress: () => navigation.navigate('Profile'),
+          style: 'default',
+        },
+      ],
+      
+    );const handlePress = () => {
+      if (user) {
+        openModal();
+      } else {
+        showAlert();
+      }
+    };
+    
+    // Debugging logs for movie details
+    console.log(movieId);
+    console.log(title);
+
+    // Rendering the main movie screen with movie details and buttons
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {posterUrl && (
@@ -96,30 +103,21 @@ console.log(movieId);
       />
       <StyledButton title="Add Review" onPress={handlePress} />
 
-      {/* MODAL */}
+      {/* MODAL itself */}
       <Modal transparent visible={formVisible} animationType="none">
         <TouchableOpacity
           activeOpacity={1}
           style={styles.backdrop}
           onPress={closeModal}
         />
-        <Animated.View
-  style={[
-    styles.modalContent,
-    { transform: [{ translateY: slideAnim }] },
-  ]}
->
-  <FormScreen
-  movieId={movieId}
-  title={title}
-  onClose={closeModal}
-/>
-</Animated.View>
+          <Animated.View style={[styles.modalContent,{ transform: [{ translateY: slideAnim }] },]} >
+          <FormScreen movieId={movieId} title={title} onClose={closeModal}/>
+        </Animated.View>
       </Modal>
     </ScrollView>
   );
 }
-
+// -------------------- STYLES --------------------
 const styles = StyleSheet.create({
   container: {
     padding: 16,
