@@ -201,6 +201,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     marginTop: 5,
+    backgroundColor: "#90bcf5ff",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#003874ff",
+    boxShadow: "0 0 5px 2px rgba(0, 0, 0, 0.7)",
   },
   subHeading: {
     fontSize: 18,
@@ -244,14 +251,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#221fffff",
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 8,
     margin: 4,
   },
   activeButton: {
-    backgroundColor: "#0056b3",
+    backgroundColor: "#003874ff",
   },
   buttonText: {
     color: "#fff",

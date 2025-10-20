@@ -18,27 +18,25 @@ import { Picker } from "@react-native-picker/picker";
 import { createReview } from "../services/backendAPI";
 import { AuthContext } from "../context/AuthContext";
 import { useRoute } from "@react-navigation/native";
+import Slider from "@react-native-community/slider";
 
 export default function FormScreen({ movieId, title, onClose }) {
   // Get auth token and user from context
   const { token, user } = useContext(AuthContext);
 
-  const [rating, setRating] = useState("");   // 1–5 (string from Picker)
+  const [rating, setRating] = useState("1"); // 1–5 (string from Picker)
   const [comment, setComment] = useState(""); // review text
   const [loading, setLoading] = useState(false); // submit button loading
 
-  
   const route = useRoute();
 
   // Submit review to backend
   const handleSubmit = async () => {
-  
     if (!rating || !comment) {
       Alert.alert("Error", "Please fill out both rating and comment.");
       return;
     }
 
-  
     const reviewData = {
       user: user.id,
       movie: movieId,
@@ -56,11 +54,8 @@ export default function FormScreen({ movieId, title, onClose }) {
       console.log("Review created:", newReview);
       Alert.alert("Success", "Your review has been submitted!");
 
-     
       setRating("");
       setComment("");
-
-     
     } catch (err) {
       console.error("Error creating review:", err);
       Alert.alert("Error", "Failed to submit review. Please try again.");
@@ -70,7 +65,6 @@ export default function FormScreen({ movieId, title, onClose }) {
   };
 
   return (
-    
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       {/* Move content up when keyboard opens */}
       <KeyboardAvoidingView
@@ -92,9 +86,18 @@ export default function FormScreen({ movieId, title, onClose }) {
 
               {/* Rating field */}
               <View style={styles.formGroup}>
-                <Text style={styles.label}>Rating (1–5):</Text>
-                <View style={styles.pickerContainer}>
-                  
+                <View style={styles.sliderContainer}>
+                  <Text style={styles.label}>Rating: {rating}⭐</Text>
+                  <Slider
+                    style={{ width: "100%", height: 40 }}
+                    minimumValue={1}
+                    maximumValue={5}
+                    step={1}
+                    value={Number(rating)}
+                    onValueChange={(value) => setRating(value.toString())}
+                    minimumTrackTintColor="#4CAF50"
+                    maximumTrackTintColor="#3b3b3bff"
+                  />
                 </View>
               </View>
 
@@ -109,7 +112,7 @@ export default function FormScreen({ movieId, title, onClose }) {
                   value={comment}
                   onChangeText={setComment}
                   textAlignVertical="top"
-                  disableFullscreenUI={true} 
+                  disableFullscreenUI={true}
                 />
               </View>
 
