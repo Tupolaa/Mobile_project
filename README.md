@@ -78,3 +78,6 @@ For feedback, improvements, or collaborations, please reach out via GitHub.
 # Meeting Notes
 
 https://1drv.ms/w/c/67b09aef79f35846/EbXFMGPeRbtCk3oo8jhJzTQBr985lOMlHYlBffL2gmaA_g?e=6AauD9
+
+# PPT about JWT Token
+https://hameenamk-my.sharepoint.com/:p:/g/personal/teemu23021_student_hamk_fi/EUlRwlbgUpdBjD4EF072uwgB8X0z30E-AIW6wFtrP-YEyA?e=vxSKdv
