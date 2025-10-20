@@ -4,11 +4,30 @@ import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Home, Search, Discover, Profile } from "./icons";
 
+/**
+ * Navbar component
+ *
+ * A bottom navigation bar that provides quick access to main screens.
+ * Highlights the active route and respects device safe areas.
+ *
+ * Screens included:
+ * - Home
+ * - Category (represented with the Search icon)
+ * - Profile
+ */
 export default function Navbar() {
   const navigation = useNavigation();
-  const [active, setActive] = useState("home");
-  const insets = useSafeAreaInsets(); // bottom inset, täl saadaan se navbar ylös häiritsemäst laitteen navigointipalkkia
+  const [active, setActive] = useState("home"); // Home is our inital route, so it could be activated at get-go.
+  const insets = useSafeAreaInsets(); // with insets we can dodge the devices nagivation-var/status-bar
 
+  /**
+   * Handles icon press:
+   * - Updates the active icon state
+   * - Navigates to the selected route
+   *
+   * @param {string} route - Screen name to navigate to
+   * @param {string} name - Icon identifier for active state
+   */
   const handlePress = (route, name) => {
     setActive(name);
     navigation.navigate(route);
@@ -23,24 +42,12 @@ export default function Navbar() {
           <Home color={active === "home" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
 
-        {/* Reviews Screen, for testing only */}
-        {/* <TouchableOpacity onPress={() => handlePress("Review", "review")}>
-          <Home color={active === "review" ? "#2D64AC" : "#a31993ff"} />
-        </TouchableOpacity> */}
-
-        {/* Form Screen, for testing only */}
-        {/* <TouchableOpacity onPress={() => handlePress("Form", "form")}>
-          <Home color={active === "form" ? "#2D64AC" : "#4ea319ff"} />
-        </TouchableOpacity> */}
-
+        {/* Category Screen */}
         <TouchableOpacity onPress={() => handlePress("Category", "search")}>
           <Search color={active === "search" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
 
-        {/* <TouchableOpacity onPress={() => handlePress("Discover")}>
-          <Discover color={active === "discover" ? "#2D64AC" : "#424242ff"} />
-        </TouchableOpacity> */}
-
+        {/* Profile Screen */}
         <TouchableOpacity onPress={() => handlePress("Profile", "profile")}>
           <Profile color={active === "profile" ? "#2D64AC" : "#424242ff"} />
         </TouchableOpacity>
@@ -54,7 +61,7 @@ export default function Navbar() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "translucent", // tää on se laitteen navigointipalkki-kohta
+    backgroundColor: "translucent", // this is the devices nagigation-bar/status-bar part
   },
   navbar: {
     flexDirection: "row",

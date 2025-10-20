@@ -3,12 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Logo({ name }) {
-  const insets = useSafeAreaInsets(); // bottom inset, täl saadaan se navbar ylös häiritsemäst laitteen navigointipalkkia
+  const insets = useSafeAreaInsets(); // with insets we can dodge the devices nagivation-var/status-bar
 
   return (
     <View style={styles.container}>
       <View style={{ height: insets.top }} />
       <View style={styles.logo}>
+        {/* Here we insert the name we got */}
         <Text style={styles.name}>{name}</Text>
       </View>
     </View>
@@ -17,7 +18,7 @@ export default function Logo({ name }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "translucent", // tää on se laitteen navigointipalkki-kohta
+    backgroundColor: "translucent", // this is the devices nagigation-bar/status-bar part
   },
   logo: {
     padding: 15,

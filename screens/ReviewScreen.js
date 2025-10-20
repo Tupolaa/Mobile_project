@@ -1,3 +1,16 @@
+/**
+ * ReviewScreen.js
+ *
+ * Displays a list of reviews for a specific movie.
+ * - Expects navigation parameters: { movieId, title }
+ * - Fetches all reviews related to the given movie ID from the backend.
+ * 
+ * Dependencies:
+ * - backendAPI: for fetching review data
+ * - useBottomPadding: ensures list content doesn’t overlap with navbar
+ * - ReviewItem: renders individual review cards
+ */
+
 import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useEffect, useState } from "react";
@@ -7,13 +20,15 @@ import ReviewItem from "../components/ReviewItem";
 import useBottomPadding from "../hooks/useBottomPadding";
 import { useRoute } from "@react-navigation/native";
 
-// Review screen pitäs saada vastaanottamaan joko (elokuva id + elokuva nimi) tai user id
 export default function ReviewScreen() {
   const contentPadding = useBottomPadding();
   const [reviews, setReviews] = useState([]);
   const route = useRoute();
 
-  // joo
+  /**
+   * Fetches all reviews related to the movie passed via route params.
+   * Uses `getAllReviewsByMovie(movieId)` from backend services.
+   */
   const loadReviews = async () => {
     try {
       // get all testing
@@ -28,17 +43,19 @@ export default function ReviewScreen() {
     }
   };
 
+  // Load reviews once on mount
   useEffect(() => {
     loadReviews();
   }, []);
 
   return (
-    // Poista top, koska stack navigator lisää oman paddingin jo
+    /// “top” edge is omitted because Stack Navigator already adds top padding
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          {/* Tähän pitäs saada se elokuvan nimi */}
+          {/* Display movie title and section heading */}
           <Text style={styles.title}>{route.params.title}{"\n"}Reviews</Text>
+          {/* FlatList renders all fetched reviews */}
           <FlatList
             data={reviews}
             keyExtractor={(item) => item._id}
