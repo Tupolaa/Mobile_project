@@ -1,3 +1,17 @@
+/**
+ * HomeScreen.js
+ *
+ * Displays personalized or random movie recommendations on the home page.
+ * - If the user is logged in, fetches recommendations based on their saved genre preferences.
+ * - If the user is a guest, fetches a random selection of movies.
+ * 
+ * Dependencies:
+ * - AuthContext: Provides authentication state (user, token, loading).
+ * - useBottomPadding: Prevents overlap with bottom navigation.
+ * - backendAPI: Fetches movie recommendation data.
+ * - getUserGenres: Reads saved genre preferences from local storage (SQLite).
+ */
+
 import React, { useContext, useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,23 +27,31 @@ export default function HomeScreen() {
   const [movies, setMovies] = useState([]);
   const [username, setUsername] = useState();
 
-  // Run whenever user/token changes and after loading finishes
+
+  /**
+   * Fetch movie recommendations when authentication state changes
+   * or once initial loading has completed.
+   */
   useEffect(() => {
     if (!loading) {
       loadRecommendations();
     }
   }, [user, token, loading]);
 
+  /**
+   * Loads movie recommendations depending on user type.
+   * - Logged-in users: personalized recommendations based on genres.
+   * - Guests: random movie selection.
+   */
   const loadRecommendations = async () => {
     try {
-      console.log("--------------------------------------------");
-      console.log("username:", username);
-      console.log("user:", user);
+      // for debugging
+      // console.log("username:", username);
+      // console.log("user:", user);
 
       // if user is logged in
       if (user != null || user != undefined) {
-        // Sit siihen päälle vielä se ehto et jos oli käyttäjä, preferenssit eli genret haetaan SQLiten tietokannasta
-        // Genre IDs pitää olla arrayssa
+        // Fetch preferred genres from local storage
         const genreIds = await getUserGenres(user.id);
         console.log("User preferred genres:", genreIds);
         const res = await getPersonalizedRecommendations(token, genreIds);
@@ -42,15 +64,13 @@ export default function HomeScreen() {
         setMovies(res || []);
         setUsername("Guest");
       }
-      console.log("--------------------------------------------");
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Loading state
+  // Loading state, shows while waiting for auth or username.
   if (loading || username == null) {
-    // Optional: show a loading spinner or placeholder
     return (
       <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
         <View style={[styles.container, contentPadding, { justifyContent: "center", alignItems: "center" }]}>
@@ -61,7 +81,7 @@ export default function HomeScreen() {
   }
 
   return (
-    // Poista top, koska stack navigator lisää oman paddingin jo
+    // “top” is omitted since Stack Navigator already applies top padding
     <SafeAreaView style={styles.safearea} edges={["left", "right"]}>
       <View style={[styles.container, contentPadding]}>
         <View style={styles.contentContainer}>
@@ -72,7 +92,7 @@ export default function HomeScreen() {
             read reviews by other users,{"\n"}
             and—<Text style={styles.bold}>if you'd like to share your own</Text>—register and log in!
           </Text>
-          {/* In here i need to send the movies */}
+          {/* Pass fetched movie data to Carousel */}
           <Carousel movies={movies} />
         </View>
       </View>
