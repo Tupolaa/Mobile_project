@@ -97,7 +97,6 @@ export default function GenreScreen() {
 
       {/* Modal with genre buttons */}
       <Modal transparent visible={formVisible} animationType="none">
-        {/* Backdrop (closes modal when tapped outside) */}
         <TouchableOpacity
           activeOpacity={1}
           style={styles.modalView}
