@@ -15,13 +15,13 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native"; //The root wrapper for React Navigation — manages navigation state.
+import { createNativeStackNavigator } from "@react-navigation/native-stack"; //A stack-based screen transition system (like iOS page pushes).
+import { GestureHandlerRootView } from "react-native-gesture-handler"; //Required for react-native-gesture-handler to work properly (for swipes, pans, etc.).
+import { SafeAreaProvider } from "react-native-safe-area-context"; //Ensures layout respects notches, status bars, and other safe areas.
 
-import { StatusBar } from "expo-status-bar";
-import { AuthProvider } from "./context/AuthContext";
+import { StatusBar } from "expo-status-bar"; //Controls status bar color and style.
+import { AuthProvider } from "./context/AuthContext"; //A custom context provider that shares authentication state (e.g., user login info) across the app.
 import HomeScreen from "./screens/HomeScreen";
 import Category from "./screens/Category";
 import Profile from "./screens/ProfileScreen";
