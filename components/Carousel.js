@@ -70,6 +70,10 @@ export default function Carousel({ movies = [] }) {
             index * ITEM_WIDTH,
           ];
 
+          // Centered item: scale = 1, opacity = 1 (fully visible and larger)
+          // Neighbors: scale = 0.8, opacity = 0.6 (smaller and faded)
+          // clamp prevents extrapolation outside the defined ranges.
+
           // Scale and opacity animations for the active item
           const scale = scrollX.interpolate({
             inputRange,
