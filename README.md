@@ -30,8 +30,13 @@ A React Native mobile application designed to provide a seamless user experience
 | [React Native Vector Icons](https://github.com/oblador/react-native-vector-icons) | Customizable icons for React Native             |
 | [JWT Decode](https://github.com/auth0/jwt-decode) | Decode JSON Web Tokens for authentication       |
 | [React Native Dotenv](https://github.com/goatandsheep/react-native-dotenv) | Manage environment variables                    |
+| [Expo SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite/) | SQLite database integration for Expo apps       |
+| [Expo Status Bar](https://docs.expo.dev/versions/latest/sdk/statusbar/) | Control the status bar appearance               |
+| [React Native Slider](https://github.com/react-native-community/react-native-slider) | Slider component for React Native               |
+| [React Native Safe Area Context](https://github.com/th3rdwave/react-native-safe-area-context) | Handle safe area insets for React Native apps   |
 
 ---
+
 ## Backend Project
 
 The backend project used to provide APIs and original data for this application can be found here:
